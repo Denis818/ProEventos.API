@@ -1,5 +1,6 @@
 using Data.Configuration;
-using Application.Configurations;
+using Application.Configurations.Extensions;
+using Application.Configurations.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

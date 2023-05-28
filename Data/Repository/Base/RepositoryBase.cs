@@ -30,10 +30,9 @@ namespace Data.Repository.Base
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(TEntity entity)
         {
-            var obj = await _context.Set<TEntity>().FindAsync(id);
-            _context.Set<TEntity>().Remove(obj);
+            _context.Set<TEntity>().Remove(entity);
             await _context.SaveChangesAsync();
         }
 

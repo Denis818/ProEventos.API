@@ -1,4 +1,6 @@
-﻿using Data.Intefaces;
+﻿using Application.Dtos;
+using AutoMapper;
+using Data.Intefaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +11,12 @@ namespace ProEventos.API.Controllers
     public class EventController : ControllerBase
     {
         private readonly IEventRepository _eventRepository;
-        public EventController(IEventRepository eventRepository)
+        protected IMapper _autoMapper { get; }
+
+        public EventController(IEventRepository eventRepository, IMapper autoMapper)
         {
             _eventRepository = eventRepository;
+            _autoMapper = autoMapper;
         }
 
         [HttpGet]
@@ -19,7 +24,7 @@ namespace ProEventos.API.Controllers
         {
             var listEvents = await _eventRepository.GetAll();
 
-            if(listEvents == null || listEvents.Any())
+            if(listEvents == null || !listEvents.Any())
             {
                 return NotFound("Nenhum evento encontrado");
             }
@@ -41,12 +46,14 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Event evento)
+        public async Task<IActionResult> Post(EventDto eventoDto)
         {
-            if (evento == null)
+            if (eventoDto == null)
             {
                 return BadRequest("Evento não pode ser nulo");
             }
+
+            var evento = _autoMapper.Map<Event>(eventoDto);
 
             await _eventRepository.InsertAsync(evento);
 
@@ -54,18 +61,21 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(Event evento)
+        public async Task<IActionResult> Put(int id, EventDto eventoDto)
         {
-            if (evento == null)
+            if (eventoDto == null)
             {
                 return BadRequest("Evento não pode ser nulo");
             }
 
-            var existingEvent = await _eventRepository.GetByIdAsync(evento.Id);
-            if (existingEvent == null)
+            var evento = await _eventRepository.GetByIdAsync(id);
+
+            if (evento == null)
             {
-                return NotFound($"Evento com id {evento.Id} não encontrado");
+                return NotFound($"Evento com id {id} não encontrado");
             }
+
+            _autoMapper.Map(eventoDto, evento);
 
             await _eventRepository.UpdateAsync(evento);
 
@@ -81,8 +91,8 @@ namespace ProEventos.API.Controllers
             {
                 return NotFound($"Evento com id {id} não encontrado");
             }
-
-            await _eventRepository.DeleteAsync(id);
+          
+            await _eventRepository.DeleteAsync(existingEvent);
 
             return NoContent(); 
         }

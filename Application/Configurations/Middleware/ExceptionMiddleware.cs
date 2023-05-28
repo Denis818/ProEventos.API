@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Application.Dtos;
 
-namespace Application.Configurations
+namespace Application.Configurations.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -34,7 +34,7 @@ namespace Application.Configurations
                 StatusCode = (int)HttpStatusCode.InternalServerError,
                 Message = $"Internal server error: {exception.GetType().FullName}",
 
-            }.ToString()); 
+            }.ToString());
         }
     }
 }
