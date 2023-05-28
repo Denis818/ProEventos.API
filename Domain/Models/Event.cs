@@ -2,7 +2,7 @@
 {
     public class Event
     {
-        public int EventoId { get; set; }
+        public int Id { get; set; }
         public string Local { get; set; }
         public DateTime DataEvento { get; set; }
         public string Tema { get; set; }

@@ -1,4 +1,5 @@
 using Data.Configuration;
+using Application.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,10 +8,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddConfigureDatabase(builder.Configuration);
+builder.Services.AddDependencyInjectios();
+
 
 // HTTP request pipeline.
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
