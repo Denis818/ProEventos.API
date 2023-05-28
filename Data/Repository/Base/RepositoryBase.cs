@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.Base
 {
-    public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class, new()
+    public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class, new()
     {
         protected AppDbContext _context;
 
