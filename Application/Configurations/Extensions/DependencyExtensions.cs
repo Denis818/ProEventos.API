@@ -7,7 +7,7 @@ namespace Application.Configurations.Extensions
 {
     public static class DependencyExtensions
     {
-        public static void AddDependencyInjectios(this IServiceCollection services)
+        public static void AddDependencyInjections(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IEventRepository, EventRepository>();

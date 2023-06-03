@@ -4,16 +4,18 @@ using Application.Configurations.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddConfigureDatabase(builder.Configuration);
-builder.Services.AddDependencyInjectios();
+builder.Services.AddDependencyInjections();
 
 
 // HTTP request pipeline.
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -21,6 +23,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCorsPolicy();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
