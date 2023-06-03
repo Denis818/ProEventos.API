@@ -6,7 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Data.Repository.Base
 {
-    public abstract class RepositoryBase<TEntity, TEntityDto> : IRepositoryBase<TEntity, TEntityDto> where TEntity  : class, new()
+    public abstract class RepositoryBase<TEntity, TEntityDto> : IRepositoryBase<TEntity, TEntityDto> 
+        where TEntity  : class, new()
+        where TEntityDto : class, new()
     {
         protected readonly AppDbContext _context;
         protected readonly IMapper _autoMapper;
