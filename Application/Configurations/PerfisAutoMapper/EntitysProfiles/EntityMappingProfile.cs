@@ -1,5 +1,5 @@
-﻿using Application.Dtos;
-using AutoMapper;
+﻿using AutoMapper;
+using Domain.Dtos;
 using Domain.Models;
 
 namespace Application.Configurations.PerfisAutoMapper.EntitysProfiles

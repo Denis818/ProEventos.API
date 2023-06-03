@@ -1,6 +1,5 @@
-﻿using Application.Dtos;
-using AutoMapper;
-using Data.Intefaces;
+﻿using Data.Intefaces;
+using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +10,10 @@ namespace ProEventos.API.Controllers
     public class EventController : ControllerBase
     {
         private readonly IEventRepository _eventRepository;
-        protected IMapper _autoMapper { get; }
 
-        public EventController(IEventRepository eventRepository, IMapper autoMapper)
+        public EventController(IEventRepository eventRepository)
         {
             _eventRepository = eventRepository;
-            _autoMapper = autoMapper;
         }
 
         [HttpGet]
@@ -53,11 +50,9 @@ namespace ProEventos.API.Controllers
                 return BadRequest("Evento não pode ser nulo");
             }
 
-            var evento = _autoMapper.Map<Event>(eventoDto);
+            await _eventRepository.InsertAsync(eventoDto);
 
-            await _eventRepository.InsertAsync(evento);
-
-            return CreatedAtAction(nameof(GetById), new { id = evento.Id }, evento);
+            return Ok("Criado com sucesso");
         }
 
         [HttpPut]
@@ -75,9 +70,7 @@ namespace ProEventos.API.Controllers
                 return NotFound($"Evento com id {id} não encontrado");
             }
 
-            _autoMapper.Map(eventoDto, evento);
-
-            await _eventRepository.UpdateAsync(evento);
+            await _eventRepository.UpdateAsync(evento, eventoDto);
 
             return NoContent();
         }
