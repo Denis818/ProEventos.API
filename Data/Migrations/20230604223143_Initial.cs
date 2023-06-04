@@ -114,12 +114,12 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     EventosId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventoEventoId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventoPalestranteId = table.Column<int>(type: "int", nullable: false)
+                    PalestrantesEventosEventoId = table.Column<int>(type: "int", nullable: false),
+                    PalestrantesEventosPalestranteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EventoPalestrantesEvento", x => new { x.EventosId, x.PalestrantesEventoEventoId, x.PalestrantesEventoPalestranteId });
+                    table.PrimaryKey("PK_EventoPalestrantesEvento", x => new { x.EventosId, x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId });
                     table.ForeignKey(
                         name: "FK_EventoPalestrantesEvento_Eventos_EventosId",
                         column: x => x.EventosId,
@@ -127,8 +127,8 @@ namespace Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EventoPalestrantesEvento_PalestrantesEventos_PalestrantesEventoEventoId_PalestrantesEventoPalestranteId",
-                        columns: x => new { x.PalestrantesEventoEventoId, x.PalestrantesEventoPalestranteId },
+                        name: "FK_EventoPalestrantesEvento_PalestrantesEventos_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
+                        columns: x => new { x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId },
                         principalTable: "PalestrantesEventos",
                         principalColumns: new[] { "EventoId", "PalestranteId" },
                         onDelete: ReferentialAction.Cascade);
@@ -139,15 +139,15 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     PalestrantesId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventoEventoId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventoPalestranteId = table.Column<int>(type: "int", nullable: false)
+                    PalestrantesEventosEventoId = table.Column<int>(type: "int", nullable: false),
+                    PalestrantesEventosPalestranteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PalestrantePalestrantesEvento", x => new { x.PalestrantesId, x.PalestrantesEventoEventoId, x.PalestrantesEventoPalestranteId });
+                    table.PrimaryKey("PK_PalestrantePalestrantesEvento", x => new { x.PalestrantesId, x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId });
                     table.ForeignKey(
-                        name: "FK_PalestrantePalestrantesEvento_PalestrantesEventos_PalestrantesEventoEventoId_PalestrantesEventoPalestranteId",
-                        columns: x => new { x.PalestrantesEventoEventoId, x.PalestrantesEventoPalestranteId },
+                        name: "FK_PalestrantePalestrantesEvento_PalestrantesEventos_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
+                        columns: x => new { x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId },
                         principalTable: "PalestrantesEventos",
                         principalColumns: new[] { "EventoId", "PalestranteId" },
                         onDelete: ReferentialAction.Cascade);
@@ -160,9 +160,9 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventoPalestrantesEvento_PalestrantesEventoEventoId_PalestrantesEventoPalestranteId",
+                name: "IX_EventoPalestrantesEvento_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
                 table: "EventoPalestrantesEvento",
-                columns: new[] { "PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId" });
+                columns: new[] { "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lotes_EventoId",
@@ -170,9 +170,9 @@ namespace Data.Migrations
                 column: "EventoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PalestrantePalestrantesEvento_PalestrantesEventoEventoId_PalestrantesEventoPalestranteId",
+                name: "IX_PalestrantePalestrantesEvento_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
                 table: "PalestrantePalestrantesEvento",
-                columns: new[] { "PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId" });
+                columns: new[] { "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_RedesSociais_EventoId",

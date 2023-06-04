@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230604204410_Initial")]
+    [Migration("20230604223143_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -167,15 +167,15 @@ namespace Data.Migrations
                     b.Property<int>("EventosId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PalestrantesEventoEventoId")
+                    b.Property<int>("PalestrantesEventosEventoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PalestrantesEventoPalestranteId")
+                    b.Property<int>("PalestrantesEventosPalestranteId")
                         .HasColumnType("int");
 
-                    b.HasKey("EventosId", "PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId");
+                    b.HasKey("EventosId", "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
 
-                    b.HasIndex("PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId");
+                    b.HasIndex("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
 
                     b.ToTable("EventoPalestrantesEvento");
                 });
@@ -185,15 +185,15 @@ namespace Data.Migrations
                     b.Property<int>("PalestrantesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PalestrantesEventoEventoId")
+                    b.Property<int>("PalestrantesEventosEventoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PalestrantesEventoPalestranteId")
+                    b.Property<int>("PalestrantesEventosPalestranteId")
                         .HasColumnType("int");
 
-                    b.HasKey("PalestrantesId", "PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId");
+                    b.HasKey("PalestrantesId", "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
 
-                    b.HasIndex("PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId");
+                    b.HasIndex("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
 
                     b.ToTable("PalestrantePalestrantesEvento");
                 });
@@ -234,7 +234,7 @@ namespace Data.Migrations
 
                     b.HasOne("Domain.Models.PalestrantesEvento", null)
                         .WithMany()
-                        .HasForeignKey("PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId")
+                        .HasForeignKey("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -249,7 +249,7 @@ namespace Data.Migrations
 
                     b.HasOne("Domain.Models.PalestrantesEvento", null)
                         .WithMany()
-                        .HasForeignKey("PalestrantesEventoEventoId", "PalestrantesEventoPalestranteId")
+                        .HasForeignKey("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
