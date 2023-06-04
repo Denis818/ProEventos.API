@@ -2,6 +2,7 @@
 using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProEventos.API.Controllers
 {
@@ -9,17 +10,17 @@ namespace ProEventos.API.Controllers
     [Route("api/[controller]")]
     public class EventsController : ControllerBase
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly IEventoRepository _eventRepository;
 
-        public EventsController(IEventRepository eventRepository)
+        public EventsController(IEventoRepository eventRepository)
         {
             _eventRepository = eventRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Evento>>> GetAll()
         {
-            var listEvents = await _eventRepository.GetAll();
+            var listEvents = await _eventRepository.Get().ToListAsync();
 
             if(listEvents == null || !listEvents.Any())
             {
@@ -30,9 +31,9 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetById(int id)
+        public async Task<ActionResult<Evento>> GetById(int id)
         {
-            var evento = await _eventRepository.GetByIdAsync(id);
+            var evento = await _eventRepository.Get(e => e.Id == id).SingleOrDefaultAsync();
 
             if(evento == null)
             {
@@ -43,7 +44,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(EventDto eventoDto)
+        public async Task<IActionResult> Post(EventoDto eventoDto)
         {
             if (eventoDto == null)
             {
@@ -56,14 +57,14 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(int id, EventDto eventoDto)
+        public async Task<IActionResult> Put(int id, EventoDto eventoDto)
         {
             if (eventoDto == null)
             {
                 return BadRequest("Evento não pode ser nulo");
             }
 
-            var evento = await _eventRepository.GetByIdAsync(id);
+            var evento = await _eventRepository.Get(e => e.Id == id).SingleOrDefaultAsync();
 
             if (evento == null)
             {
@@ -78,7 +79,7 @@ namespace ProEventos.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            var existingEvent = await _eventRepository.GetByIdAsync(id);
+            var existingEvent = await _eventRepository.Get(e => e.Id == id).SingleOrDefaultAsync();
 
             if (existingEvent == null)
             {

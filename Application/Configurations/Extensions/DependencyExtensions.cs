@@ -2,6 +2,7 @@
 using Data.Intefaces;
 using Data.Repository;
 using System.Reflection;
+using Data.Interfaces;
 
 namespace Application.Configurations.Extensions
 {
@@ -10,7 +11,11 @@ namespace Application.Configurations.Extensions
         public static void AddDependencyInjections(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddScoped<IEventRepository, EventRepository>();
+
+            services.AddScoped<ILoteRepository, LoteRepository>();
+            services.AddScoped<IEventoRepository, EventoRepository>();
+            services.AddScoped<IPalestrantesRepository, PalestrantesRepository>();
+            services.AddScoped<IRedeSocialRepository, RedeSocialRepository>();
         }
     }
 }

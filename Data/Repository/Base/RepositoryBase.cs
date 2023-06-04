@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Data.DataContext;
-using Data.Intefaces;
+using Data.Interfaces.IBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Data.Repository.Base
 {
@@ -12,16 +14,21 @@ namespace Data.Repository.Base
     {
         protected readonly AppDbContext _context;
         protected readonly IMapper _autoMapper;
+        protected DbSet<TEntity> DbSet { get; }
 
         protected RepositoryBase(IServiceProvider service)
         {
             _context = service.GetRequiredService<AppDbContext>();
             _autoMapper = service.GetRequiredService<IMapper>();
+            DbSet = _context.Set<TEntity>();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> expression = null)
         {
-            return await _context.Set<TEntity>().AsNoTracking().ToListAsync();
+            if(expression != null)
+                return DbSet.Where(expression);
+
+            return DbSet;
         }
 
         public async Task InsertAsync(TEntityDto entityDto)
@@ -46,9 +53,10 @@ namespace Data.Repository.Base
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TEntity> GetByIdAsync(int id)
+        public async Task DeleteRangeAsync(TEntity[] entityArray)
         {
-            return await _context.Set<TEntity>().FindAsync(id);
+            _context.Set<TEntity>().RemoveRange(entityArray);
+            await _context.SaveChangesAsync();
         }
     }
 }
