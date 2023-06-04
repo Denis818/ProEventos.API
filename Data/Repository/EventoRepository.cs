@@ -21,7 +21,7 @@ namespace Data.Repository
 
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
-                             .ThenInclude(eventPalest => eventPalest.Palestrante);
+                             .ThenInclude(eventPalest => eventPalest.Palestrantes);
 
             return await query.OrderBy(e => e.Id).ToListAsync();
         }
@@ -34,7 +34,7 @@ namespace Data.Repository
                     
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
-                             .ThenInclude(eventPalest => eventPalest.Palestrante);
+                             .ThenInclude(eventPalest => eventPalest.Palestrantes);
 
             return await query.OrderBy(evento => evento.Id).ToListAsync();
         }
@@ -47,7 +47,7 @@ namespace Data.Repository
 
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
-                             .ThenInclude(eventPalest => eventPalest.Palestrante);
+                             .ThenInclude(eventPalest => eventPalest.Palestrantes);
 
             return await query.SingleOrDefaultAsync();
         }
