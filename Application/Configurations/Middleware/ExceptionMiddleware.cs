@@ -32,7 +32,7 @@ namespace Application.Configurations.Middleware
             return context.Response.WriteAsync(new ErrorDetails
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
-                Message = $"Internal server error: {exception.GetType().FullName}",
+                Message = $"Error: {exception.Message}",
 
             }.ToString());
         }

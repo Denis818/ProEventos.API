@@ -4,7 +4,7 @@ using Domain.Models;
 
 namespace Data.Interfaces
 {
-    public interface ILoteRepository : IRepositoryBase<Lote, LoteDto>
+    public interface ILoteRepository : IRepositoryBase<Lote>
     {
     }
 }

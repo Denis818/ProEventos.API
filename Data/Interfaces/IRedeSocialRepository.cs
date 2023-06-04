@@ -4,7 +4,7 @@ using Domain.Models;
 
 namespace Data.Interfaces
 {
-    public interface IRedeSocialRepository : IRepositoryBase<RedeSocial, RedeSocialDto>
+    public interface IRedeSocialRepository : IRepositoryBase<RedeSocial>
     {
     }
 }

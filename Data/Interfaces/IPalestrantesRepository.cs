@@ -4,7 +4,7 @@ using Domain.Models;
 
 namespace Data.Interfaces
 {
-    public interface IPalestrantesRepository : IRepositoryBase<Palestrante, PalestranteDto>
+    public interface IPalestrantesRepository : IRepositoryBase<Palestrante>
     {
         Task<IEnumerable<Palestrante>> GetAllEventosByNameAsync(string nome, bool includePalestrantes);
         Task<IEnumerable<Palestrante>> GetAllEventosAsync(string tema, bool includePalestrantes);

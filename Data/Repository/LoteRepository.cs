@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repository
 {
-    public class LoteRepository : RepositoryBase<Lote, LoteDto>, ILoteRepository
+    public class LoteRepository : RepositoryBase<Lote>, ILoteRepository
     {
         public LoteRepository(IServiceProvider service) : base(service)
         {

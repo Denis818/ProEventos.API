@@ -8,18 +8,15 @@ using System.Linq.Expressions;
 
 namespace Data.Repository.Base
 {
-    public abstract class RepositoryBase<TEntity, TEntityDto> : IRepositoryBase<TEntity, TEntityDto> 
+    public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> 
         where TEntity  : class, new()
-        where TEntityDto : class, new()
     {
         protected readonly AppDbContext _context;
-        protected readonly IMapper _autoMapper;
         protected DbSet<TEntity> DbSet { get; }
 
         protected RepositoryBase(IServiceProvider service)
         {
             _context = service.GetRequiredService<AppDbContext>();
-            _autoMapper = service.GetRequiredService<IMapper>();
             DbSet = _context.Set<TEntity>();
         }
 
@@ -31,32 +28,29 @@ namespace Data.Repository.Base
             return DbSet;
         }
 
-        public async Task InsertAsync(TEntityDto entityDto)
+        public async Task InsertAsync(TEntity entity)
         {
-            var entity = _autoMapper.Map<TEntity>(entityDto);
-
-            await _context.Set<TEntity>().AddAsync(entity);
-            await _context.SaveChangesAsync();
+            await DbSet.AddAsync(entity);
         }
 
-        public async Task UpdateAsync(TEntity entity, TEntityDto entityDto)
+        public void UpdateAsync(TEntity entity)
         {
-            _autoMapper.Map(entityDto, entity);
-
-            _context.Set<TEntity>().Update(entity);
-            await _context.SaveChangesAsync();
+            DbSet.Update(entity);
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public void DeleteAsync(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteRangeAsync(TEntity[] entityArray)
+        public void DeleteRangeAsync(TEntity[] entityArray)
         {
             _context.Set<TEntity>().RemoveRange(entityArray);
-            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync()) > 0;
         }
     }
 }

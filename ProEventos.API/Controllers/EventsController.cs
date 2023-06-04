@@ -1,4 +1,5 @@
-﻿using Data.Intefaces;
+﻿using Application.Services;
+using Data.Intefaces;
 using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace ProEventos.API.Controllers
         {
             var listEvents = await _eventRepository.Get().ToListAsync();
 
-            if(listEvents == null || !listEvents.Any())
+            if (listEvents == null || !listEvents.Any())
             {
                 return NotFound("Nenhum evento encontrado");
             }
@@ -35,7 +36,7 @@ namespace ProEventos.API.Controllers
         {
             var evento = await _eventRepository.Get(e => e.Id == id).SingleOrDefaultAsync();
 
-            if(evento == null)
+            if (evento == null)
             {
                 return NotFound($"Evento com id {id} não encontrado");
             }
@@ -44,7 +45,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(EventoDto eventoDto)
+        public async Task<IActionResult> Post(Evento eventoDto)
         {
             if (eventoDto == null)
             {
@@ -57,7 +58,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(int id, EventoDto eventoDto)
+        public async Task<IActionResult> Put(int id, Evento eventoDto)
         {
             if (eventoDto == null)
             {
@@ -71,7 +72,7 @@ namespace ProEventos.API.Controllers
                 return NotFound($"Evento com id {id} não encontrado");
             }
 
-            await _eventRepository.UpdateAsync(evento, eventoDto);
+            _eventRepository.UpdateAsync(evento);
 
             return NoContent();
         }
@@ -79,17 +80,11 @@ namespace ProEventos.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            var existingEvent = await _eventRepository.Get(e => e.Id == id).SingleOrDefaultAsync();
+            EventoService eventoService = new(_eventRepository);
 
-            if (existingEvent == null)
-            {
-                return NotFound($"Evento com id {id} não encontrado");
-            }
-          
-            await _eventRepository.DeleteAsync(existingEvent);
+            await eventoService.DeleteEvento(id);
 
-            return NoContent(); 
+            return NoContent();
         }
     }
 }
- 

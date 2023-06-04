@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Data.Repository
 {
-    public class EventoRepository : RepositoryBase<Evento, EventoDto>, IEventoRepository
+    public class EventoRepository : RepositoryBase<Evento>, IEventoRepository
     {
         public EventoRepository(IServiceProvider service) : base(service)
         {

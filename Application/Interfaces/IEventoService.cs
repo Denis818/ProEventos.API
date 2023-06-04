@@ -1,11 +1,12 @@
-﻿using Data.Interfaces.IBase;
-using Domain.Dtos;
-using Domain.Models;
+﻿using Domain.Models;
 
-namespace Data.Intefaces
+namespace Application.Interfaces
 {
-    public interface IEventoRepository : IRepositoryBase<Evento>
+    public interface IEventoService
     {
+        Task<Evento> InsertEvento(Evento evento);
+        Task<Evento> UpdateEvento(int id, Evento evento);
+        Task<bool> DeleteEvento(int id);
         Task<IEnumerable<Evento>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false);
         Task<IEnumerable<Evento>> GetAllEventosAsync(string tema, bool includePalestrantes = false);
         Task<Evento> GetAllEventosByIdAsync(int id, bool includePalestrantes = false);

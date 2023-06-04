@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repository
 {
-    public class RedeSocialRepository : RepositoryBase<RedeSocial, RedeSocialDto>, IRedeSocialRepository
+    public class RedeSocialRepository : RepositoryBase<RedeSocial>, IRedeSocialRepository
     {
         public RedeSocialRepository(IServiceProvider service) : base(service)
         {

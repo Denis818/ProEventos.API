@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository
 {
-    public class PalestrantesRepository : RepositoryBase<Palestrante, PalestranteDto>, IPalestrantesRepository
+    public class PalestrantesRepository : RepositoryBase<Palestrante>, IPalestrantesRepository
     {
         public PalestrantesRepository(IServiceProvider service) : base(service)
         {
