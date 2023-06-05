@@ -12,30 +12,35 @@ namespace Data.Repository.Base
         where TEntity : class, new()
     {
         protected readonly AppDbContext _context;
-        protected DbSet<TEntity> DbSet { get; }
+        protected DbSet<TEntity> _dbSet { get; }
 
         protected RepositoryBase(IServiceProvider service)
         {
             _context = service.GetRequiredService<AppDbContext>();
-            DbSet = _context.Set<TEntity>();
+            _dbSet = _context.Set<TEntity>();
         }
 
         public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> expression = null)
         {
             if (expression != null)
-                return DbSet.Where(expression);
+                return _dbSet.Where(expression);
 
-            return DbSet;
+            return _dbSet;
+        }
+
+        public async Task<TEntity> GetByIdAsync(int id)
+        {
+            return await _dbSet.FindAsync(id);
         }
 
         public async Task InsertAsync(TEntity entity)
         {
-            await DbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity);
         }
 
         public void UpdateAsync(TEntity entity)
         {
-            DbSet.Update(entity);
+            _dbSet.Update(entity);
         }
 
         public void DeleteAsync(TEntity entity)

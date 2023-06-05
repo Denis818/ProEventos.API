@@ -15,23 +15,14 @@ namespace Application.Services.Base
             _repository = service.GetRequiredService<TRepository>();
         }
 
-        public virtual async Task<Evento> InsertEvento(TEntity entity)
+        public async Task<bool> DeleteAsync(int id)
         {
-            try
-            {
-                await _repository.InsertAsync(entity);
+            var entity = await _repository.GetByIdAsync(id) ??
+                throw new Exception("Id não foi encontrado.");
 
-                if (await _repository.SaveChangesAsync())
-                {
-                    
-                }
+            _repository.DeleteAsync(entity);
 
-                return null;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _repository.SaveChangesAsync();
         }
     }
 }

@@ -80,11 +80,11 @@ namespace ProEventos.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            EventoService eventoService = new(_eventRepository);
+            //EventoService eventoService = new(_eventRepository);
 
-            await eventoService.DeleteEvento(id);
+            //await eventoService.DeleteAsync(id);
 
-            return NoContent();
+            //return NoContent();
         }
     }
 }

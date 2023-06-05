@@ -16,7 +16,7 @@ namespace Data.Repository
 
         public async Task<IEnumerable<Evento>> GetAllEventosAsync(string tema, bool includePalestrantes = false)
         {
-            IQueryable<Evento> query = Get().Include(evento => evento.Lote)
+            IQueryable<Evento> query = Get().AsNoTracking().Include(evento => evento.Lote)
                                             .Include(evento => evento.RedesSociais);
 
             if (includePalestrantes)
@@ -29,8 +29,7 @@ namespace Data.Repository
         public async Task<IEnumerable<Evento>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
         {
             IQueryable<Evento> query = Get(evento => evento.Tema.ToLower().Contains(tema.ToLower()))
-                                      .Include(evento => evento.Lote)
-                                      .Include(evento => evento.RedesSociais);
+                                            .AsNoTracking().Include(evento => evento.Lote).Include(evento => evento.RedesSociais);
                     
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
@@ -41,9 +40,9 @@ namespace Data.Repository
 
         public async Task<Evento> GetAllEventosByIdAsync(int id, bool includePalestrantes = false)
         {
-            IQueryable<Evento> query = Get(evento => evento.Id == id)
-                                      .Include(evento => evento.Lote)
-                                      .Include(evento => evento.RedesSociais);
+            IQueryable<Evento> query = Get(evento => evento.Id == id).AsNoTracking()
+                                      .Include(evento => evento.RedesSociais)
+                                      .Include(evento => evento.Lote);
 
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
