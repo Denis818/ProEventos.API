@@ -21,7 +21,7 @@ namespace ProEventos.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Evento>>> GetAll()
         {
-            var listEvents = await _eventRepository.Get().ToListAsync();
+            var listEvents = await _eventRepository.Get().AsNoTracking().ToListAsync();
 
             if (listEvents == null || !listEvents.Any())
             {

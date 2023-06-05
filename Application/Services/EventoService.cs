@@ -11,10 +11,10 @@ namespace Application.Services
         {
         }
 
-        public async Task<Evento> InsertEvento(Evento evento)
+        public async Task<Evento> InsertAsync(Evento evento)
         {
-
             await _repository.InsertAsync(evento);
+
             if (await _repository.SaveChangesAsync())
             {
                 return await _repository.GetAllEventosByIdAsync(evento.Id, false);
@@ -23,7 +23,7 @@ namespace Application.Services
             return null;
         }
 
-        public async Task<Evento> UpdateEvento(int id, Evento modelEvento)
+        public async Task<Evento> UpdateAsync(int id, Evento modelEvento)
         {
             var evento = await _repository.GetAllEventosByIdAsync(id, false);
 
