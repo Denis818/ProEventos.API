@@ -8,8 +8,8 @@ using System.Linq.Expressions;
 
 namespace Data.Repository.Base
 {
-    public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> 
-        where TEntity  : class, new()
+    public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
+        where TEntity : class, new()
     {
         protected readonly AppDbContext _context;
         protected DbSet<TEntity> DbSet { get; }
@@ -22,7 +22,7 @@ namespace Data.Repository.Base
 
         public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> expression = null)
         {
-            if(expression != null)
+            if (expression != null)
                 return DbSet.Where(expression);
 
             return DbSet;
