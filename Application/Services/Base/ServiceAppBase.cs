@@ -1,18 +1,22 @@
-﻿using Data.Interfaces.IBase;
+﻿using Application.Interfaces.Utility;
+using Application.Utilities;
+using Data.Interfaces.Base;
 using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services.Base
 {
-    public abstract class ServiceAppBase<TEntity, TRepository>
+    public abstract class ServiceAppBase<TEntity, TIRepository>
         where TEntity : class, new()
-        where TRepository : class, IRepositoryBase<TEntity>
+        where TIRepository : class, IRepositoryBase<TEntity>
     {
-        protected readonly TRepository _repository;
+        protected readonly TIRepository _repository;
+        protected readonly INotificador _notificador;
 
         protected ServiceAppBase(IServiceProvider service)
         {
-            _repository = service.GetRequiredService<TRepository>();
+            _repository = service.GetRequiredService<TIRepository>();
+            _notificador = service.GetRequiredService<INotificador>();
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -24,5 +28,11 @@ namespace Application.Services.Base
 
             return await _repository.SaveChangesAsync();
         }
+
+        public void NotificarError(string message) =>
+            _notificador.Add(new Notificacao(EnumTipoNotificacao.Error, message));
+
+        public virtual bool OperacaoValida() =>
+            !(_notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Error).Count() > 0);
     }
 }

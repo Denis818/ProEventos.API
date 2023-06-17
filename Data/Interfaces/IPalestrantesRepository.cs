@@ -1,4 +1,4 @@
-﻿using Data.Interfaces.IBase;
+﻿using Data.Interfaces.Base;
 using Domain.Dtos;
 using Domain.Models;
 

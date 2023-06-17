@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Data.DataContext;
-using Data.Interfaces.IBase;
+using Data.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;

@@ -1,11 +1,12 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.Services;
 using Application.Services.Base;
+using Data.Intefaces;
 using Data.Repository;
 using Domain.Models;
 
 namespace Application.Services
 {
-    public class EventoService : ServiceAppBase<Evento, EventoRepository>, IEventoService
+    public class EventoService : ServiceAppBase<Evento, IEventoRepository>, IEventoService
     {
         public EventoService(IServiceProvider service) : base(service)
         {
@@ -27,7 +28,19 @@ namespace Application.Services
         {
             var evento = await _repository.GetAllEventosByIdAsync(id, false);
 
-            if (evento == null) return null;
+            if (evento == null)
+            {
+                NotificarError("Teste Erro Deu bão");
+                NotificarError("Eroooooo bão");
+                NotificarError("1234 eroes  Deu bão");
+
+                NotificarError("Laiola ewrros denis Erro Deu bão");
+                return null;
+            }
+            NotificarError("Eroooooo bão");
+            NotificarError("1234 eroes  Deu bão");
+
+            NotificarError("Laiola ewrros denis Erro Deu bão");
 
             modelEvento.Id = evento.Id;
 

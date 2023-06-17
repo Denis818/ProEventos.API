@@ -9,8 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddConfigureDatabase(builder.Configuration);
 builder.Services.AddDependencyInjections();
+builder.Services.AddConfigureDatabase(builder.Configuration);
 
 
 // HTTP request pipeline.

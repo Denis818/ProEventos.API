@@ -1,19 +1,21 @@
-﻿using Application.Services;
+﻿using Application.Interfaces.Services;
+using Application.Services;
 using Data.Intefaces;
 using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProEventos.API.Controllers.Base;
 
 namespace ProEventos.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EventsController : ControllerBase
+    public class EventsController : MainController
     {
         private readonly IEventoRepository _eventRepository;
 
-        public EventsController(IEventoRepository eventRepository)
+        public EventsController(IServiceProvider service, IEventoRepository eventRepository) : base(service)
         {
             _eventRepository = eventRepository;
         }
@@ -58,7 +60,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(int id, Evento eventoDto)
+        public async Task<IActionResult> Put(int id, Event eventoDto)
         {
             if (eventoDto == null)
             {
@@ -74,17 +76,15 @@ namespace ProEventos.API.Controllers
 
             _eventRepository.UpdateAsync(evento);
 
-            return NoContent();
+            return CustomResponse<Evento>(null);
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            //EventoService eventoService = new(_eventRepository);
+           
 
-            //await eventoService.DeleteAsync(id);
-
-            //return NoContent();
+            return NoContent();
         }
     }
 }
