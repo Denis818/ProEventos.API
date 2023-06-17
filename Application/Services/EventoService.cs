@@ -18,7 +18,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosAsync(includePalestrantes);
 
             if (eventos.IsNullOrEmpty())
-                NotificarError("Não foram encontrados nunhum evento");
+                NotificarError("Nenhum evento encontrado");
 
             return eventos;
         }
@@ -28,7 +28,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosByTemaAsync(tema);
 
             if (eventos.IsNullOrEmpty())
-                NotificarError("Não foram encontrados nunhum evento");
+                NotificarError($"Eventos por tema, {tema} não encontrados");
 
             return eventos;
         }
@@ -38,31 +38,19 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                NotificarError("Não foram encontrados nunhum evento");
+                NotificarError($"Evento com id {id} não encontrado");
 
             return evento;
         }
 
-        public async Task<Evento> InsertAsync(Evento evento)
+        public async Task<Evento> UpdateAsync(int id, Evento modelEvento)
         {
-            if (evento == null)
+            if (modelEvento == null)
             {
                 NotificarError("Evento não pode ser nulo.");
                 return null;
             }
 
-            await _repository.InsertAsync(evento);
-
-            if (await _repository.SaveChangesAsync())
-            {
-                return await _repository.GetEventosByIdAsync(evento.Id, false);
-            }
-
-            return null;
-        }
-
-        public async Task<Evento> UpdateAsync(int id, Evento modelEvento)
-        {
             var evento = await _repository.GetEventosByIdAsync(id, false);
 
             if (evento == null)
@@ -75,12 +63,14 @@ namespace Application.Services
 
             _repository.UpdateAsync(modelEvento);
 
-            if (await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
-                return await _repository.GetEventosByIdAsync(modelEvento.Id, false);
+                NotificarError("Ocorreu um erro ao atualizar evento.");
+                return null;
             }
 
-            return null;
+            return await _repository.GetEventosByIdAsync(modelEvento.Id, false);
+            
         }
     }
 }

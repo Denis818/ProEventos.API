@@ -1,10 +1,6 @@
 ﻿using Application.Interfaces.Services;
-using Application.Services;
-using Data.Intefaces;
-using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ProEventos.API.Controllers.Base;
 
 namespace ProEventos.API.Controllers
@@ -13,80 +9,47 @@ namespace ProEventos.API.Controllers
     [Route("api/[controller]")]
     public class EventsController : MainController
     {
-        private readonly IEventoRepository _eventRepository;
-        private readonly IEventoService eventoService;
+        private readonly IEventoService _eventoService;
 
-        public EventsController(IServiceProvider service, IEventoRepository eventRepository, IEventoService eventoService) : base(service)
+        public EventsController(IServiceProvider service, IEventoService eventoService) : base(service)
         {
-            _eventRepository = eventRepository;
-            this.eventoService = eventoService;
+            _eventoService = eventoService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var listEvents = await eventoService.GetAllEventosAsync();//await _eventRepository.Get().AsNoTracking().ToListAsync();
-
-            if (listEvents == null)
-            {
-                return NotFound("Nenhum evento encontrado");
-            }
-
-            return CustomResponse(listEvents);
+            return CustomResponse(await _eventoService.GetAllEventosAsync(true));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Evento>> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var evento = await _eventRepository.Get(e => e.Id == id).SingleOrDefaultAsync();
+            return CustomResponse(await _eventoService.GetEventosByIdAsync(id, true));
+        }
 
-            if (evento == null)
-            {
-                return NotFound($"Evento com id {id} não encontrado");
-            }
-
-            return Ok(evento);
+        [HttpGet("{tema}/tema")]
+        public async Task<IActionResult> GetByTema(string tema)
+        {
+            return CustomResponse(await _eventoService.GetAllEventosByTemaAsync(tema, true));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Evento eventoDto)
+        public async Task<IActionResult> Post(Evento model)
         {
-            if (eventoDto == null)
-            {
-                return BadRequest("Evento não pode ser nulo");
-            }
-
-            await _eventRepository.InsertAsync(eventoDto);
-
-            return Ok("Criado com sucesso");
+            return CustomResponse(await _eventoService.InsertAsync(model));
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Evento eventoDto)
         {
-            if (eventoDto == null)
-            {
-                return BadRequest("Evento não pode ser nulo");
-            }
-
-            var evento = await _eventRepository.Get(e => e.Id == id).SingleOrDefaultAsync();
-
-            if (evento == null)
-            {
-                return NotFound($"Evento com id {id} não encontrado");
-            }
-
-            _eventRepository.UpdateAsync(evento);
-
-            return CustomResponse<Evento>(null);
+            return CustomResponse(await _eventoService.UpdateAsync(id, eventoDto));
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-           
-
-            return NoContent();
+            return CustomResponse(await _eventoService.DeleteAsync(id));
         }
     }
 }

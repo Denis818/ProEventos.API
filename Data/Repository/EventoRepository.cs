@@ -50,7 +50,5 @@ namespace Data.Repository
 
             return await query.SingleOrDefaultAsync();
         }
-
-
     }
 }
