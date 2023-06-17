@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProEventos.API.Controllers.Base
 {
-    public class MainController : Controller
+    public class MainController : ControllerBase
     {
         protected INotificador _notificador { get; private set; }
         protected IMapper AutoMapper { get; private set; }

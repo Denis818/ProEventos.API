@@ -14,7 +14,7 @@ namespace Data.Repository
         {
         }
 
-        public async Task<IEnumerable<Evento>> GetAllEventosAsync(string tema, bool includePalestrantes = false)
+        public async Task<IEnumerable<Evento>> GetAllEventosAsync(bool includePalestrantes = false)
         {
             IQueryable<Evento> query = Get().AsNoTracking().Include(evento => evento.Lote)
                                             .Include(evento => evento.RedesSociais);
@@ -38,7 +38,7 @@ namespace Data.Repository
             return await query.OrderBy(evento => evento.Id).ToListAsync();
         }
 
-        public async Task<Evento> GetAllEventosByIdAsync(int id, bool includePalestrantes = false)
+        public async Task<Evento> GetEventosByIdAsync(int id, bool includePalestrantes = false)
         {
             IQueryable<Evento> query = Get(evento => evento.Id == id).AsNoTracking()
                                       .Include(evento => evento.RedesSociais)
@@ -50,5 +50,7 @@ namespace Data.Repository
 
             return await query.SingleOrDefaultAsync();
         }
+
+
     }
 }

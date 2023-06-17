@@ -3,6 +3,7 @@ using Application.Services.Base;
 using Data.Intefaces;
 using Data.Repository;
 using Domain.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services
 {
@@ -12,13 +13,49 @@ namespace Application.Services
         {
         }
 
+        public async Task<IEnumerable<Evento>> GetAllEventosAsync(bool includePalestrantes = false)
+        {
+            var eventos = await _repository.GetAllEventosAsync(includePalestrantes);
+
+            if (eventos.IsNullOrEmpty())
+                NotificarError("Não foram encontrados nunhum evento");
+
+            return eventos;
+        }
+
+        public async Task<IEnumerable<Evento>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
+        {
+            var eventos = await _repository.GetAllEventosByTemaAsync(tema);
+
+            if (eventos.IsNullOrEmpty())
+                NotificarError("Não foram encontrados nunhum evento");
+
+            return eventos;
+        }
+
+        public async Task<Evento> GetEventosByIdAsync(int id, bool includePalestrantes = false)
+        {
+            var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
+
+            if (evento == null)
+                NotificarError("Não foram encontrados nunhum evento");
+
+            return evento;
+        }
+
         public async Task<Evento> InsertAsync(Evento evento)
         {
+            if (evento == null)
+            {
+                NotificarError("Evento não pode ser nulo.");
+                return null;
+            }
+
             await _repository.InsertAsync(evento);
 
             if (await _repository.SaveChangesAsync())
             {
-                return await _repository.GetAllEventosByIdAsync(evento.Id, false);
+                return await _repository.GetEventosByIdAsync(evento.Id, false);
             }
 
             return null;
@@ -26,21 +63,13 @@ namespace Application.Services
 
         public async Task<Evento> UpdateAsync(int id, Evento modelEvento)
         {
-            var evento = await _repository.GetAllEventosByIdAsync(id, false);
+            var evento = await _repository.GetEventosByIdAsync(id, false);
 
             if (evento == null)
             {
-                NotificarError("Teste Erro Deu bão");
-                NotificarError("Eroooooo bão");
-                NotificarError("1234 eroes  Deu bão");
-
-                NotificarError("Laiola ewrros denis Erro Deu bão");
+                NotificarError("Evento não encontrado.");
                 return null;
             }
-            NotificarError("Eroooooo bão");
-            NotificarError("1234 eroes  Deu bão");
-
-            NotificarError("Laiola ewrros denis Erro Deu bão");
 
             modelEvento.Id = evento.Id;
 
@@ -48,25 +77,10 @@ namespace Application.Services
 
             if (await _repository.SaveChangesAsync())
             {
-                return await _repository.GetAllEventosByIdAsync(modelEvento.Id, false);
+                return await _repository.GetEventosByIdAsync(modelEvento.Id, false);
             }
 
             return null;
-        }
-
-        public Task<IEnumerable<Evento>> GetAllEventosAsync(string tema, bool includePalestrantes = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Evento>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Evento> GetAllEventosByIdAsync(int id, bool includePalestrantes = false)
-        {
-            throw new NotImplementedException();
         }
     }
 }

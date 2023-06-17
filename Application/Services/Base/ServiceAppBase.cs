@@ -21,8 +21,8 @@ namespace Application.Services.Base
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id) ??
-                throw new Exception("Id não foi encontrado.");
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null) NotificarError("Id não foi encontrado.");
 
             _repository.DeleteAsync(entity);
 

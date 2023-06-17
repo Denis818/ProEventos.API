@@ -14,23 +14,25 @@ namespace ProEventos.API.Controllers
     public class EventsController : MainController
     {
         private readonly IEventoRepository _eventRepository;
+        private readonly IEventoService eventoService;
 
-        public EventsController(IServiceProvider service, IEventoRepository eventRepository) : base(service)
+        public EventsController(IServiceProvider service, IEventoRepository eventRepository, IEventoService eventoService) : base(service)
         {
             _eventRepository = eventRepository;
+            this.eventoService = eventoService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Evento>>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var listEvents = await _eventRepository.Get().AsNoTracking().ToListAsync();
+            var listEvents = await eventoService.GetAllEventosAsync();//await _eventRepository.Get().AsNoTracking().ToListAsync();
 
-            if (listEvents == null || !listEvents.Any())
+            if (listEvents == null)
             {
                 return NotFound("Nenhum evento encontrado");
             }
 
-            return Ok(listEvents);
+            return CustomResponse(listEvents);
         }
 
         [HttpGet("{id}")]
@@ -60,7 +62,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(int id, Event eventoDto)
+        public async Task<IActionResult> Put(int id, Evento eventoDto)
         {
             if (eventoDto == null)
             {
