@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class PalestrantesEvento
+    public class PalestranteEvento
     {
-        public IEnumerable<Palestrante> Palestrantes { get; set; }
-        public IEnumerable<Evento> Eventos { get; set; }
-
         public int PalestranteId { get; set; }
+        public Palestrante Palestrante { get; set; }
         public int EventoId { get; set; }
+        public Evento Evento { get; set; }
     }
 }

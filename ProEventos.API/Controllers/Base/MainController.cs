@@ -23,17 +23,16 @@ namespace ProEventos.API.Controllers.Base
                 var erros = _notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Error);
                 var informacoes = _notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Informacao);
 
-
                 if (erros.Any())
                     return BadRequest(new ResponseResultDTO<TResponse>(default)
                     {
-                        Notificacoes = erros.ToArray()
+                        Message = erros.ToArray()
                     });
 
                 if (informacoes.Any())
                     return Ok(new ResponseResultDTO<TResponse>(contentResponse)
                     {
-                        Notificacoes = informacoes.ToArray()
+                        Message = informacoes.ToArray()
                     });
             }
 
@@ -44,7 +43,7 @@ namespace ProEventos.API.Controllers.Base
     public class ResponseResultDTO<TResponse>
     {
         public TResponse Data { get; set; }
-        public Notificacao[] Notificacoes { get; set; }
+        public Notificacao[] Message { get; set; } = Array.Empty<Notificacao>();
 
         public ResponseResultDTO(TResponse data)
         {

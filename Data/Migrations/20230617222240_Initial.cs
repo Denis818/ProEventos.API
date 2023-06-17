@@ -38,25 +38,13 @@ namespace Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MiniCurriculo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImagemURl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImagemURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Palestrantes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PalestrantesEventos",
-                columns: table => new
-                {
-                    PalestranteId = table.Column<int>(type: "int", nullable: false),
-                    EventoId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PalestrantesEventos", x => new { x.EventoId, x.PalestranteId });
                 });
 
             migrationBuilder.CreateTable(
@@ -84,6 +72,30 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PalestrantesEventos",
+                columns: table => new
+                {
+                    PalestranteId = table.Column<int>(type: "int", nullable: false),
+                    EventoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PalestrantesEventos", x => new { x.EventoId, x.PalestranteId });
+                    table.ForeignKey(
+                        name: "FK_PalestrantesEventos_Eventos_EventoId",
+                        column: x => x.EventoId,
+                        principalTable: "Eventos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PalestrantesEventos_Palestrantes_PalestranteId",
+                        column: x => x.PalestranteId,
+                        principalTable: "Palestrantes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RedesSociais",
                 columns: table => new
                 {
@@ -101,68 +113,15 @@ namespace Data.Migrations
                         name: "FK_RedesSociais_Eventos_EventoId",
                         column: x => x.EventoId,
                         principalTable: "Eventos",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RedesSociais_Palestrantes_PalestranteId",
                         column: x => x.PalestranteId,
                         principalTable: "Palestrantes",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EventoPalestrantesEvento",
-                columns: table => new
-                {
-                    EventosId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventosEventoId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventosPalestranteId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EventoPalestrantesEvento", x => new { x.EventosId, x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId });
-                    table.ForeignKey(
-                        name: "FK_EventoPalestrantesEvento_Eventos_EventosId",
-                        column: x => x.EventosId,
-                        principalTable: "Eventos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EventoPalestrantesEvento_PalestrantesEventos_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
-                        columns: x => new { x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId },
-                        principalTable: "PalestrantesEventos",
-                        principalColumns: new[] { "EventoId", "PalestranteId" },
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PalestrantePalestrantesEvento",
-                columns: table => new
-                {
-                    PalestrantesId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventosEventoId = table.Column<int>(type: "int", nullable: false),
-                    PalestrantesEventosPalestranteId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PalestrantePalestrantesEvento", x => new { x.PalestrantesId, x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId });
-                    table.ForeignKey(
-                        name: "FK_PalestrantePalestrantesEvento_PalestrantesEventos_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
-                        columns: x => new { x.PalestrantesEventosEventoId, x.PalestrantesEventosPalestranteId },
-                        principalTable: "PalestrantesEventos",
-                        principalColumns: new[] { "EventoId", "PalestranteId" },
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PalestrantePalestrantesEvento_Palestrantes_PalestrantesId",
-                        column: x => x.PalestrantesId,
-                        principalTable: "Palestrantes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EventoPalestrantesEvento_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
-                table: "EventoPalestrantesEvento",
-                columns: new[] { "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lotes_EventoId",
@@ -170,9 +129,9 @@ namespace Data.Migrations
                 column: "EventoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PalestrantePalestrantesEvento_PalestrantesEventosEventoId_PalestrantesEventosPalestranteId",
-                table: "PalestrantePalestrantesEvento",
-                columns: new[] { "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId" });
+                name: "IX_PalestrantesEventos_PalestranteId",
+                table: "PalestrantesEventos",
+                column: "PalestranteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RedesSociais_EventoId",
@@ -189,19 +148,13 @@ namespace Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EventoPalestrantesEvento");
-
-            migrationBuilder.DropTable(
                 name: "Lotes");
 
             migrationBuilder.DropTable(
-                name: "PalestrantePalestrantesEvento");
+                name: "PalestrantesEventos");
 
             migrationBuilder.DropTable(
                 name: "RedesSociais");
-
-            migrationBuilder.DropTable(
-                name: "PalestrantesEventos");
 
             migrationBuilder.DropTable(
                 name: "Eventos");

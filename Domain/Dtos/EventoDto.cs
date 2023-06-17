@@ -13,6 +13,6 @@ namespace Domain.Dtos
         public string Email { get; set; }
         public IEnumerable<Lote> Lote { get; set; }
         public IEnumerable<RedeSocial> RedesSociais { get; set; }
-        public IEnumerable<PalestrantesEvento> PalestrantesEvento { get; set; }
+        public IEnumerable<PalestranteEvento> PalestrantesEvento { get; set; }
     }
 }

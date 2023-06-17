@@ -16,12 +16,12 @@ namespace Data.Repository
 
         public async Task<IEnumerable<Evento>> GetAllEventosAsync(bool includePalestrantes = false)
         {
-            IQueryable<Evento> query = Get().AsNoTracking().Include(evento => evento.Lote)
+            IQueryable<Evento> query = Get().AsNoTracking().Include(evento => evento.Lotes)
                                             .Include(evento => evento.RedesSociais);
 
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
-                             .ThenInclude(eventPalest => eventPalest.Palestrantes);
+                             .ThenInclude(eventPalest => eventPalest.Palestrante);
 
             return await query.OrderBy(e => e.Id).ToListAsync();
         }
@@ -29,11 +29,11 @@ namespace Data.Repository
         public async Task<IEnumerable<Evento>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
         {
             IQueryable<Evento> query = Get(evento => evento.Tema.ToLower().Contains(tema.ToLower()))
-                                            .AsNoTracking().Include(evento => evento.Lote).Include(evento => evento.RedesSociais);
+                                            .AsNoTracking().Include(evento => evento.Lotes).Include(evento => evento.RedesSociais);
                     
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
-                             .ThenInclude(eventPalest => eventPalest.Palestrantes);
+                             .ThenInclude(eventPalest => eventPalest.Palestrante);
 
             return await query.OrderBy(evento => evento.Id).ToListAsync();
         }
@@ -42,11 +42,11 @@ namespace Data.Repository
         {
             IQueryable<Evento> query = Get(evento => evento.Id == id).AsNoTracking()
                                       .Include(evento => evento.RedesSociais)
-                                      .Include(evento => evento.Lote);
+                                      .Include(evento => evento.Lotes);
 
             if (includePalestrantes)
                 query = query.Include(evento => evento.PalestrantesEventos)
-                             .ThenInclude(eventPalest => eventPalest.Palestrantes);
+                             .ThenInclude(eventPalest => eventPalest.Palestrante);
 
             return await query.SingleOrDefaultAsync();
         }

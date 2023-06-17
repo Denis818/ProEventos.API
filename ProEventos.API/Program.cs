@@ -5,7 +5,7 @@ using Application.Configurations.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
-builder.Services.AddControllers();
+builder.Services.AddControllersConfiguration();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

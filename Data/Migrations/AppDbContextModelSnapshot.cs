@@ -100,7 +100,7 @@ namespace Data.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagemURl")
+                    b.Property<string>("ImagemURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MiniCurriculo")
@@ -117,7 +117,7 @@ namespace Data.Migrations
                     b.ToTable("Palestrantes");
                 });
 
-            modelBuilder.Entity("Domain.Models.PalestrantesEvento", b =>
+            modelBuilder.Entity("Domain.Models.PalestranteEvento", b =>
                 {
                     b.Property<int>("EventoId")
                         .HasColumnType("int");
@@ -126,6 +126,8 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("EventoId", "PalestranteId");
+
+                    b.HasIndex("PalestranteId");
 
                     b.ToTable("PalestrantesEventos");
                 });
@@ -159,46 +161,10 @@ namespace Data.Migrations
                     b.ToTable("RedesSociais");
                 });
 
-            modelBuilder.Entity("EventoPalestrantesEvento", b =>
-                {
-                    b.Property<int>("EventosId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PalestrantesEventosEventoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PalestrantesEventosPalestranteId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EventosId", "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
-
-                    b.HasIndex("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
-
-                    b.ToTable("EventoPalestrantesEvento");
-                });
-
-            modelBuilder.Entity("PalestrantePalestrantesEvento", b =>
-                {
-                    b.Property<int>("PalestrantesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PalestrantesEventosEventoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PalestrantesEventosPalestranteId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PalestrantesId", "PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
-
-                    b.HasIndex("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId");
-
-                    b.ToTable("PalestrantePalestrantesEvento");
-                });
-
             modelBuilder.Entity("Domain.Models.Lote", b =>
                 {
                     b.HasOne("Domain.Models.Evento", "Evento")
-                        .WithMany("Lote")
+                        .WithMany("Lotes")
                         .HasForeignKey("EventoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -206,60 +172,55 @@ namespace Data.Migrations
                     b.Navigation("Evento");
                 });
 
-            modelBuilder.Entity("Domain.Models.RedeSocial", b =>
+            modelBuilder.Entity("Domain.Models.PalestranteEvento", b =>
                 {
                     b.HasOne("Domain.Models.Evento", "Evento")
-                        .WithMany("RedesSociais")
-                        .HasForeignKey("EventoId");
+                        .WithMany("PalestrantesEventos")
+                        .HasForeignKey("EventoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Models.Palestrante", "Palestrante")
-                        .WithMany("RedesSociais")
-                        .HasForeignKey("PalestranteId");
+                        .WithMany("PalestrantesEventos")
+                        .HasForeignKey("PalestranteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Evento");
 
                     b.Navigation("Palestrante");
                 });
 
-            modelBuilder.Entity("EventoPalestrantesEvento", b =>
+            modelBuilder.Entity("Domain.Models.RedeSocial", b =>
                 {
-                    b.HasOne("Domain.Models.Evento", null)
-                        .WithMany()
-                        .HasForeignKey("EventosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Domain.Models.Evento", "Evento")
+                        .WithMany("RedesSociais")
+                        .HasForeignKey("EventoId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Domain.Models.PalestrantesEvento", null)
-                        .WithMany()
-                        .HasForeignKey("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                    b.HasOne("Domain.Models.Palestrante", "Palestrante")
+                        .WithMany("RedesSociais")
+                        .HasForeignKey("PalestranteId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity("PalestrantePalestrantesEvento", b =>
-                {
-                    b.HasOne("Domain.Models.Palestrante", null)
-                        .WithMany()
-                        .HasForeignKey("PalestrantesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Evento");
 
-                    b.HasOne("Domain.Models.PalestrantesEvento", null)
-                        .WithMany()
-                        .HasForeignKey("PalestrantesEventosEventoId", "PalestrantesEventosPalestranteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Palestrante");
                 });
 
             modelBuilder.Entity("Domain.Models.Evento", b =>
                 {
-                    b.Navigation("Lote");
+                    b.Navigation("Lotes");
+
+                    b.Navigation("PalestrantesEventos");
 
                     b.Navigation("RedesSociais");
                 });
 
             modelBuilder.Entity("Domain.Models.Palestrante", b =>
                 {
+                    b.Navigation("PalestrantesEventos");
+
                     b.Navigation("RedesSociais");
                 });
 #pragma warning restore 612, 618
