@@ -2,7 +2,6 @@
 using Application.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ProEventos.API.Dto;
 
 namespace ProEventos.API.Controllers.Base
 {
@@ -38,6 +37,17 @@ namespace ProEventos.API.Controllers.Base
             }
 
             return Ok(new ResponseResultDTO<TResponse>(contentResponse));
+        }
+    }
+
+    public class ResponseResultDTO<TResponse>
+    {
+        public TResponse Data { get; set; }
+        public Notificacao[] Message { get; set; } = Array.Empty<Notificacao>();
+
+        public ResponseResultDTO(TResponse data = default)
+        {
+            Data = data;
         }
     }
 }

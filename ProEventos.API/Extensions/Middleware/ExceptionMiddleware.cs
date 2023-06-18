@@ -1,5 +1,5 @@
-﻿using System.Net;
-using ProEventos.API.Dto;
+﻿using ProEventos.API.Dto.Exception;
+using System.Net;
 
 namespace Application.Configurations.Middleware
 {

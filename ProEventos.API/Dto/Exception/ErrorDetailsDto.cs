@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace ProEventos.API.Dto
+namespace ProEventos.API.Dto.Exception
 {
     public class ErrorDetailsDto
     {
