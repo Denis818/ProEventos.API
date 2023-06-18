@@ -1,6 +1,5 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Http;
-using Application.Dtos;
+using ProEventos.API.Dto;
 
 namespace Application.Configurations.Middleware
 {
@@ -29,7 +28,7 @@ namespace Application.Configurations.Middleware
         {
             context.Response.ContentType = "application/json";
 
-            return context.Response.WriteAsync(new ErrorDetails
+            return context.Response.WriteAsync(new ErrorDetailsDto
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
                 Message = $"Error: {exception.Message}",

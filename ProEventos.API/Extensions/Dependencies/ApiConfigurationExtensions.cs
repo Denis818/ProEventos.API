@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using System.Text.Json.Serialization;
 
-namespace Application.Configurations.Extensions
+namespace ProEventos.API.Extensions.Dependencies
 {
     public static class ApiConfigurationExtensions
     {

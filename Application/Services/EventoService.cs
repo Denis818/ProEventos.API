@@ -18,7 +18,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosAsync(includePalestrantes);
 
             if (eventos.IsNullOrEmpty())
-                NotificarError("Nenhum evento encontrado");
+                NotificarInformacao("Nenhum evento encontrado");
 
             return eventos;
         }
@@ -28,7 +28,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosByTemaAsync(tema);
 
             if (eventos.IsNullOrEmpty())
-                NotificarError($"Eventos por tema, {tema} não encontrados");
+                NotificarInformacao($"Eventos por tema, {tema} não encontrados");
 
             return eventos;
         }
@@ -38,7 +38,7 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                NotificarError($"Evento com id {id} não encontrado");
+                NotificarInformacao($"Evento com id {id} não encontrado");
 
             return evento;
         }
@@ -47,7 +47,7 @@ namespace Application.Services
         {
             if (modelEvento == null)
             {
-                NotificarError("Evento não pode ser nulo.");
+                NotificarInformacao("Evento não pode ser nulo.");
                 return null;
             }
 
@@ -55,7 +55,7 @@ namespace Application.Services
 
             if (evento == null)
             {
-                NotificarError("Evento não encontrado.");
+                NotificarInformacao("Evento não encontrado.");
                 return null;
             }
 
@@ -65,7 +65,7 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarError("Ocorreu um erro ao atualizar evento.");
+                NotificarInformacao("Ocorreu um erro ao atualizar evento.");
                 return null;
             }
 

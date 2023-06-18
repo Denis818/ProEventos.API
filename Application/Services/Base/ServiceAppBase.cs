@@ -23,7 +23,7 @@ namespace Application.Services.Base
         {
             if (entity == null)
             {
-                NotificarError("Entidade não pode ser nula.");
+                NotificarInformacao("Entidade não pode ser nula.");
                 return null;
             }
 
@@ -31,7 +31,7 @@ namespace Application.Services.Base
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarError("Ocorreu um erro ao adicionar");
+                NotificarInformacao("Ocorreu um erro ao adicionar");
                 return null;
             }
 
@@ -44,7 +44,7 @@ namespace Application.Services.Base
 
             if (entity == null)
             {
-                NotificarError($"Id {id} não foi encontrado.");
+                NotificarInformacao($"Id {id} não foi encontrado.");
                 return false;
             }
                 
@@ -53,10 +53,10 @@ namespace Application.Services.Base
             return await _repository.SaveChangesAsync();
         }
 
-        public void NotificarError(string message) =>
-            _notificador.Add(new Notificacao(EnumTipoNotificacao.Error, message));
+        public void NotificarInformacao(string message) =>
+            _notificador.Add(new Notificacao(EnumTipoNotificacao.Informacao, message));
 
         public virtual bool OperacaoValida() =>
-            !(_notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Error).Count() > 0);
+            !(_notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Error).Any());
     }
 }

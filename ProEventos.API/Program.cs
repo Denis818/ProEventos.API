@@ -1,6 +1,7 @@
 using Data.Configuration;
 using Application.Configurations.Extensions;
 using Application.Configurations.Middleware;
+using ProEventos.API.Extensions.Dependencies;
 
 var builder = WebApplication.CreateBuilder(args);
 

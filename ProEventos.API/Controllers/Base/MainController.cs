@@ -2,6 +2,7 @@
 using Application.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.API.Dto;
 
 namespace ProEventos.API.Controllers.Base
 {
@@ -24,7 +25,7 @@ namespace ProEventos.API.Controllers.Base
                 var informacoes = _notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Informacao);
 
                 if (erros.Any())
-                    return BadRequest(new ResponseResultDTO<TResponse>(default)
+                    return BadRequest(new ResponseResultDTO<TResponse>
                     {
                         Message = erros.ToArray()
                     });
@@ -39,17 +40,4 @@ namespace ProEventos.API.Controllers.Base
             return Ok(new ResponseResultDTO<TResponse>(contentResponse));
         }
     }
-
-    public class ResponseResultDTO<TResponse>
-    {
-        public TResponse Data { get; set; }
-        public Notificacao[] Message { get; set; } = Array.Empty<Notificacao>();
-
-        public ResponseResultDTO(TResponse data)
-        {
-            Data = data;
-        }
-    }
-
-
 }
