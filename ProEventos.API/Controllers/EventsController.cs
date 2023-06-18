@@ -49,7 +49,10 @@ namespace ProEventos.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            return CustomResponse(await _eventoService.DeleteAsync(id));
+            if (!await _eventoService.DeleteAsync(id))
+                return CustomResponse("Ocorreu um erro ao deletar");
+
+            return CustomResponse("Deletado");
         }
     }
 }

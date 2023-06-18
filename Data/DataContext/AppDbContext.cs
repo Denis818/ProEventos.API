@@ -21,13 +21,13 @@ namespace Data.DataContext
                 .HasKey(PE => new { PE.EventoId, PE.PalestranteId });
 
             modelBuilder.Entity<Evento>()
-                .HasMany(e => e.RedesSociais)
-                .WithOne(rs => rs.Evento)
+                .HasMany(evento => evento.RedesSociais)
+                .WithOne(redeSocial => redeSocial.Evento)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Palestrante>()
-                .HasMany(e => e.RedesSociais)
-                .WithOne(rs => rs.Palestrante)
+                .HasMany(evento => evento.RedesSociais)
+                .WithOne(redeSocial => redeSocial.Palestrante)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
