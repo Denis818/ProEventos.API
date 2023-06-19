@@ -1,24 +1,11 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Application.Utilities
+﻿namespace Application.Utilities
 {
-
     public class Notificacao
     {
-        [JsonIgnore]
-        public EnumTipoNotificacao Tipo { get; set; }
         public string Mensagem { get; set; }
-
-        public Notificacao(EnumTipoNotificacao tipo, string mensagem)
+        public Notificacao(string mensagem)
         {
-            Tipo = tipo;
             Mensagem = mensagem;
         }
-    }
-
-    public enum EnumTipoNotificacao
-    {
-        Informacao,
-        Error,
     }
 }

@@ -54,9 +54,6 @@ namespace Application.Services.Base
         }
 
         public void NotificarInformacao(string message) =>
-            _notificador.Add(new Notificacao(EnumTipoNotificacao.Informacao, message));
-
-        public virtual bool OperacaoValida() =>
-            !(_notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Error).Any());
+            _notificador.Add(new Notificacao(message));
     }
 }

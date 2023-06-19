@@ -18,22 +18,12 @@ namespace ProEventos.API.Controllers.Base
 
         protected IActionResult CustomResponse<TResponse>(TResponse contentResponse)
         {
-            if (_notificador.ListNotificacoes.Count >= 1)
+            if (_notificador.ListNotificacoes.Any())
             {
-                var erros = _notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Error);
-                var informacoes = _notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Informacao);
-
-                if (erros.Any())
-                    return BadRequest(new ResponseResultDTO<TResponse>
-                    {
-                        Message = erros.ToArray()
-                    });
-
-                if (informacoes.Any())
-                    return Ok(new ResponseResultDTO<TResponse>(contentResponse)
-                    {
-                        Message = informacoes.ToArray()
-                    });
+                return Ok(new ResponseResultDTO<TResponse>(contentResponse)
+                {
+                    Message = _notificador.ListNotificacoes.ToArray()
+                });
             }
 
             return Ok(new ResponseResultDTO<TResponse>(contentResponse));
