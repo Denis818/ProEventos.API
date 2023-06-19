@@ -28,7 +28,7 @@ namespace ProEventos.API.Controllers
             return CustomResponse(await _eventoService.GetEventosByIdAsync(id, true));
         }
 
-        [HttpGet("{tema}/tema")]
+        [HttpGet("tema/{tema}")]
         public async Task<IActionResult> GetByTema(string tema)
         {
             return CustomResponse(await _eventoService.GetAllEventosByTemaAsync(tema, true));
