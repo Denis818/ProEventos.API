@@ -7,22 +7,22 @@ namespace ProEventos.API.Controllers.Base
 {
     public abstract class MainController : ControllerBase
     {
-        protected INotificador _notificador { get; private set; }
+        protected INotificador Notificador { get; private set; }
         protected IMapper AutoMapper { get; private set; }
 
         public MainController(IServiceProvider service)
         {
-            _notificador = service.GetRequiredService<INotificador>();
+            Notificador = service.GetRequiredService<INotificador>();
             AutoMapper = service.GetRequiredService<IMapper>();
         }
 
         protected IActionResult CustomResponse<TResponse>(TResponse contentResponse)
         {
-            if (_notificador.ListNotificacoes.Any())
+            if (Notificador.ListNotificacoes.Any())
             {
                 return Ok(new ResponseResultDTO<TResponse>(contentResponse)
                 {
-                    Message = _notificador.ListNotificacoes.ToArray()
+                    Message = Notificador.ListNotificacoes.ToArray()
                 });
             }
 

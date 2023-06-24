@@ -28,7 +28,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosByTemaAsync(tema);
 
             if (eventos.IsNullOrEmpty())
-                NotificarInformacao($"Eventos por tema, {tema} não encontrados");
+                NotificarInformacao($"Eventos com tema {tema} não encontrados");
 
             return eventos;
         }
