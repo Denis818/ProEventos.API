@@ -27,11 +27,13 @@ namespace Application.Configurations.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;  // Novo
 
             return context.Response.WriteAsync(new ErrorDetailsDto
             {
+                Data = null,
                 StatusCode = (int)HttpStatusCode.InternalServerError,
-                Message = $"Error: {exception.Message}",
+                Message = exception.Message,
 
             }.ToString());
         }
