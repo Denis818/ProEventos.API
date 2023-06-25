@@ -31,10 +31,8 @@ namespace Application.Configurations.Middleware
 
             return context.Response.WriteAsync(new ErrorDetailsDto
             {
-                Data = null,
                 StatusCode = (int)HttpStatusCode.InternalServerError,
                 Message = exception.Message,
-
             }.ToString());
         }
     }
