@@ -1,4 +1,5 @@
-﻿using ProEventos.API.Dto.Exception;
+﻿using Microsoft.AspNetCore.Http;
+using ProEventos.API.Dto.Exception;
 using System.Net;
 
 namespace Application.Configurations.Middleware
