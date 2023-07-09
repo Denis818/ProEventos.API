@@ -1,13 +1,15 @@
 ﻿using Application.Interfaces.Services;
+using DadosInCached.CustomAttribute;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.API.Controllers.Base;
 
 namespace ProEventos.API.Controllers
 {
+    [Cached(900)]
     [ApiController]
     [Route("api/[controller]")]
-    public class EventsController : MainController
+    public class EventsController : BaseApiController
     {
         private readonly IEventoService _eventoService;
 
@@ -16,7 +18,7 @@ namespace ProEventos.API.Controllers
             _eventoService = eventoService;
         }
 
-        [HttpGet]
+        [HttpGet()]
         public async Task<IActionResult> GetAll()
         {
             return CustomResponse(await _eventoService.GetAllEventosAsync(true));
