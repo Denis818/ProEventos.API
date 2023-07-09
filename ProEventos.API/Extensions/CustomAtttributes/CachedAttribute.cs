@@ -18,7 +18,11 @@ namespace DadosInCached.CustomAttribute
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (context.Controller is not BaseApiController baseApiController) return;
+            if (context.Controller is not BaseApiController baseApiController)
+            {
+                await next();
+                return;
+            }
 
             string _cachekey = context.HttpContext.Request.Headers["Referer"].ToString();
 
@@ -26,7 +30,7 @@ namespace DadosInCached.CustomAttribute
             {
                 await next();
                 return;
-            }        
+            }
 
             if (string.IsNullOrEmpty(_cachekey) || !ApiCache.TryGetValue(_cachekey, out _))
                 _cachekey = CreateCacheKey(context.HttpContext.Request, baseApiController);
