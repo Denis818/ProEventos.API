@@ -6,7 +6,7 @@ using ProEventos.API.Controllers.Base;
 
 namespace ProEventos.API.Controllers
 {
-    [Cached(900)]
+    [Cached(15)]
     [ApiController]
     [Route("api/[controller]")]
     public class EventsController : BaseApiController

@@ -2,8 +2,6 @@
 using Application.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.Security.Claims;
 
 namespace ProEventos.API.Controllers.Base
 {
@@ -12,18 +10,10 @@ namespace ProEventos.API.Controllers.Base
     {
         protected INotificador Notificador { get; private set; }
         protected IMapper AutoMapper { get; private set; }
-        public string UserId { get; set; }
         public BaseApiController(IServiceProvider service)
         {
             Notificador = service.GetRequiredService<INotificador>();
             AutoMapper = service.GetRequiredService<IMapper>();
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            base.OnActionExecuting(filterContext);
-
-            UserId = User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
         }
 
         protected IActionResult CustomResponse<TResponse>(TResponse contentResponse)
@@ -37,19 +27,6 @@ namespace ProEventos.API.Controllers.Base
             }
 
             return Ok(new ResponseResultDTO<TResponse>(contentResponse));
-        }
-
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<string> ReadRequestBody()
-        {
-            Request.EnableBuffering();
-            using var reader = new StreamReader(Request.Body, leaveOpen: true);
-
-            string body = await reader.ReadToEndAsync();
-            Request.Body.Position = 0;
-
-            return body;
         }
     }
 

@@ -1,94 +1,61 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using ProEventos.API.Controllers.Base;
 
 namespace DadosInCached.CustomAttribute
 {
+    [AttributeUsage(AttributeTargets.Class)]
     public class CachedAttribute : Attribute, IAsyncActionFilter
     {
         protected readonly MemoryCache ApiCache = new(new MemoryCacheOptions());
-        protected int _timespan;
+        protected int _expirationTime;
         protected readonly List<string> KeyList = new();
 
-        public CachedAttribute(int timespan = 40)
+        public CachedAttribute(int expirationTime = 5)
         {
-            _timespan = timespan;
+            _expirationTime = expirationTime;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (context.Controller is not BaseApiController baseApiController)
+            string _cachekey = CreateCacheKey(context.HttpContext.Request);
+
+            if (context.HttpContext.Request.Method != "GET")
             {
+                CleanCache();
                 await next();
                 return;
             }
 
-            string _cachekey = context.HttpContext.Request.Headers["Referer"].ToString();
-
-            if (IsNotCacheable(context))
+            if (ApiCache.TryGetValue(_cachekey, out IActionResult cachedResult))
             {
-                await next();
+                context.Result = cachedResult;
                 return;
-            }
-
-            if (string.IsNullOrEmpty(_cachekey) || !ApiCache.TryGetValue(_cachekey, out _))
-                _cachekey = CreateCacheKey(context.HttpContext.Request, baseApiController);
-            
-
-            if (ApiCache.TryGetValue(_cachekey, out Tuple<DateTime, IActionResult> cachedResult))
-            {
-                if (DateTime.UtcNow < cachedResult.Item1)
-                {
-                    context.Result = cachedResult.Item2;
-                    return;
-                }
-                else
-                {
-                    ApiCache.Remove(_cachekey);
-                }
             }
 
             var executedContext = await next();
-
-            ArmazenarRespostaEmCache(executedContext, baseApiController);
+            ArmazenarRespostaEmCache(executedContext);
         }
 
-        private void ArmazenarRespostaEmCache(ActionExecutedContext executedContext, BaseApiController baseApiController)
+        private void ArmazenarRespostaEmCache(ActionExecutedContext context)
         {
-            string _cachekey = CreateCacheKey(executedContext.HttpContext.Request, baseApiController);
-            if (executedContext.Result is OkObjectResult okResult)
+            if (context.Result is OkObjectResult okResult)
             {
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromSeconds(_timespan));
+                string cacheKey = CreateCacheKey(context.HttpContext.Request);
 
-                var resultToCache = new Tuple<DateTime, IActionResult>(DateTime.UtcNow.AddSeconds(_timespan), okResult);
+                ApiCache.Set(cacheKey, okResult,
+                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(_expirationTime)));
 
-                ApiCache.Set(_cachekey, resultToCache, cacheEntryOptions);
-                KeyList.Add(_cachekey);
+                KeyList.Add(cacheKey);
             }
         }
 
-        protected string CreateCacheKey(HttpRequest request, BaseApiController baseApiController)
+        protected string CreateCacheKey(HttpRequest request)
         {
-            var requestPath = request.Path;
-            var acceptHeader = request.Headers["Accept"].ToString();
-            var requestContent = baseApiController.ReadRequestBody()?.ToString() ?? string.Empty;
+            string baseUri = $"{request.Scheme}://{request.Host.Value}";
+            string fullPath = $"{request.Path.Value}{request.QueryString.Value}";
 
-            return $"{requestPath}:{acceptHeader}:{requestContent}";
-        }
-
-        protected bool IsNotCacheable(ActionExecutingContext context)
-        {
-            var requestMethod = context.HttpContext.Request.Method;
-
-            if (requestMethod != "POST" && requestMethod != "GET")
-            {
-                CleanCache();
-                return true;
-            }
-
-            return false;
+            return $"{baseUri}{fullPath}";
         }
 
         protected void CleanCache()
