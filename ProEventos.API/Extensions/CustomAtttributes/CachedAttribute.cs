@@ -22,8 +22,7 @@ namespace DadosInCached.CustomAttribute
 
             if (context.HttpContext.Request.Method != "GET")
             {
-                CleanCache();
-                await next();
+                await CleanCache(next);
                 return;
             }
 
@@ -58,7 +57,7 @@ namespace DadosInCached.CustomAttribute
             return $"{baseUri}{fullPath}";
         }
 
-        protected void CleanCache()
+        protected async Task CleanCache(ActionExecutionDelegate next)
         {
             foreach (var key in KeyList)
             {
@@ -66,6 +65,7 @@ namespace DadosInCached.CustomAttribute
             }
 
             KeyList.Clear();
+            await next();
         }
     }
 }
