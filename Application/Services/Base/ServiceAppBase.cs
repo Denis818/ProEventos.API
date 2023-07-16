@@ -1,41 +1,46 @@
 ﻿using Application.Interfaces.Utility;
 using Application.Utilities;
+using AutoMapper;
 using Data.Interfaces.Base;
 using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services.Base
 {
-    public abstract class ServiceAppBase<TEntity, TIRepository>
+    public abstract class ServiceAppBase<TEntity, TEntityDto, TIRepository>
         where TEntity : class, new()
         where TIRepository : class, IRepositoryBase<TEntity>
     {
         protected readonly TIRepository _repository;
         protected readonly INotificador _notificador;
+        protected readonly IMapper _mapper;
 
         protected ServiceAppBase(IServiceProvider service)
         {
             _repository = service.GetRequiredService<TIRepository>();
             _notificador = service.GetRequiredService<INotificador>();
+            _mapper = service.GetRequiredService<IMapper>();
         }
 
-        public async Task<TEntity> InsertAsync(TEntity entity)
+        public async Task<TEntityDto> InsertAsync(TEntityDto entityDto)
         {
-            if (entity == null)
+            if (entityDto == null)
             {
                 NotificarInformacao("Entidade não pode ser nula.");
-                return null;
+                return default;
             }
+
+            var entity = _mapper.Map<TEntity>(entityDto);
 
             await _repository.InsertAsync(entity);
 
             if (!await _repository.SaveChangesAsync())
             {
                 NotificarInformacao("Ocorreu um erro ao adicionar");
-                return null;
+                return default;
             }
 
-            return entity;
+            return entityDto;
         }
 
         public async Task<bool> DeleteAsync(int id)

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Services;
 using DadosInCached.CustomAttribute;
+using Domain.Dtos;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.API.Controllers.Base;
@@ -37,13 +38,13 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Evento model)
+        public async Task<IActionResult> Post(EventoDto eventodto)
         {
-            return CustomResponse(await _eventoService.InsertAsync(model));
+            return CustomResponse(await _eventoService.InsertAsync(eventodto));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Evento eventoDto)
+        public async Task<IActionResult> Put(int id, EventoDto eventoDto)
         {
             return CustomResponse(await _eventoService.UpdateAsync(id, eventoDto));
         }

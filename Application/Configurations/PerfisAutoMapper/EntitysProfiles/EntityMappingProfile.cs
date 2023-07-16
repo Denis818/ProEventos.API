@@ -8,10 +8,10 @@ namespace Application.Configurations.PerfisAutoMapper.EntitysProfiles
     {
         public EntityMappingProfile()
         {
-            CreateMap<EventoDto, Evento>();
-            CreateMap<PalestranteDto, Palestrante>();
-            CreateMap<LoteDto, Lote>();
-            CreateMap<RedeSocialDto, RedeSocial>();
+            CreateMap<Lote, LoteDto>().ReverseMap();
+            CreateMap<Evento, EventoDto>().ReverseMap();
+            CreateMap<RedeSocial, RedeSocialDto>().ReverseMap();
+            CreateMap<Palestrante, PalestranteDto>().ReverseMap();
         }
     }
 }

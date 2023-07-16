@@ -9,11 +9,9 @@ namespace ProEventos.API.Controllers.Base
     public abstract class BaseApiController : Controller
     {
         protected INotificador Notificador { get; private set; }
-        protected IMapper AutoMapper { get; private set; }
         public BaseApiController(IServiceProvider service)
         {
             Notificador = service.GetRequiredService<INotificador>();
-            AutoMapper = service.GetRequiredService<IMapper>();
         }
 
         protected IActionResult CustomResponse<TResponse>(TResponse contentResponse)

@@ -2,50 +2,58 @@
 using Application.Services.Base;
 using Data.Intefaces;
 using Data.Repository;
+using Domain.Dtos;
 using Domain.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services
 {
-    public class EventoService : ServiceAppBase<Evento, IEventoRepository>, IEventoService
+    public class EventoService : ServiceAppBase<Evento, EventoDto, IEventoRepository>, IEventoService
     {
         public EventoService(IServiceProvider service) : base(service)
         {
         }
 
-        public async Task<IEnumerable<Evento>> GetAllEventosAsync(bool includePalestrantes = false)
+        public async Task<IEnumerable<EventoDto>> GetAllEventosAsync(bool includePalestrantes = false)
         {
             var eventos = await _repository.GetAllEventosAsync(includePalestrantes);
 
             if (eventos.IsNullOrEmpty())
                 NotificarInformacao("Nenhum evento encontrado");
 
-            return eventos;
+            var eventoDto = _mapper.Map<IEnumerable<EventoDto>>(eventos);
+
+            return eventoDto;
         }
 
-        public async Task<IEnumerable<Evento>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
+        public async Task<IEnumerable<EventoDto>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
         {
             var eventos = await _repository.GetAllEventosByTemaAsync(tema);
 
             if (eventos.IsNullOrEmpty())
                 NotificarInformacao($"Eventos com tema {tema} não encontrados");
 
-            return eventos;
+            var eventoDto = _mapper.Map<IEnumerable<EventoDto>>(eventos);
+
+            return eventoDto;
         }
 
-        public async Task<Evento> GetEventosByIdAsync(int id, bool includePalestrantes = false)
+        public async Task<EventoDto> GetEventosByIdAsync(int id, bool includePalestrantes = false)
         {
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
                 NotificarInformacao($"Evento com id {id} não encontrado");
 
-            return evento;
+            var eventoDto = _mapper.Map<EventoDto>(evento);
+
+            return eventoDto;
         }
 
-        public async Task<Evento> UpdateAsync(int id, Evento modelEvento)
+        public async Task<EventoDto> UpdateAsync(int id, EventoDto eventoDto)
         {
-            if (modelEvento == null)
+            if (eventoDto == null)
             {
                 NotificarInformacao("Evento não pode ser nulo.");
                 return null;
@@ -59,9 +67,9 @@ namespace Application.Services
                 return null;
             }
 
-            modelEvento.Id = evento.Id;
+            _mapper.Map(eventoDto, evento);
 
-            _repository.UpdateAsync(modelEvento);
+            _repository.UpdateAsync(evento);
 
             if (!await _repository.SaveChangesAsync())
             {
@@ -69,8 +77,8 @@ namespace Application.Services
                 return null;
             }
 
-            return await _repository.GetEventosByIdAsync(modelEvento.Id, false);
-            
+            return _mapper.Map<EventoDto>(evento);
+
         }
     }
 }
