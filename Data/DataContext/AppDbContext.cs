@@ -1,10 +1,12 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Data.DataContext
 {
     public class AppDbContext : DbContext
     {
+        private readonly ILoggerFactory _loggerFactory;
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
         { 
         }
@@ -28,7 +30,14 @@ namespace Data.DataContext
             modelBuilder.Entity<Palestrante>()
                 .HasMany(evento => evento.RedesSociais)
                 .WithOne(redeSocial => redeSocial.Palestrante)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);          
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.UseLoggerFactory(_loggerFactory);
         }
     }
 }
