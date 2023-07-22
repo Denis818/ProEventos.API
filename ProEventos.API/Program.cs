@@ -7,12 +7,11 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//SeriLog
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm} {Level:u3}] {Message:lj}{NewLine}{Exception}\n",
-    theme: AnsiConsoleTheme.Sixteen)
-    .CreateLogger();
-
+    theme: AnsiConsoleTheme.Sixteen).CreateLogger();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(Log.Logger);
 
@@ -27,7 +26,6 @@ builder.Services.AddConfigureDatabase(builder.Configuration);
 
 // HTTP request pipeline.
 var app = builder.Build();
-//app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
