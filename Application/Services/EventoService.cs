@@ -1,15 +1,13 @@
 ﻿using Application.Interfaces.Services;
-using Application.Services.Base;
 using Data.Intefaces;
-using Data.Repository;
 using Domain.Dtos;
 using Domain.Models;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Application.Services.Base;
 
 namespace Application.Services
 {
-    public class EventoService : ServiceAppBase<Evento, EventoDto, IEventoRepository>, IEventoService
+    public class EventoService : ServiceAppBase<Evento, IEventoRepository>, IEventoService
     {
         public EventoService(IServiceProvider service) : base(service)
         {
@@ -51,19 +49,30 @@ namespace Application.Services
             return eventoDto;
         }
 
-        public async Task<EventoDto> UpdateAsync(int id, EventoDto eventoDto)
+        public async Task<EventoDto> InsertAsync(EventoDto eventoDto)
         {
-            if (eventoDto == null)
+            var evento = _mapper.Map<Evento>(eventoDto);
+
+            await _repository.InsertAsync(evento);
+
+            if (!await _repository.SaveChangesAsync())
             {
-                NotificarInformacao("Evento não pode ser nulo.");
+                NotificarInformacao("Ocorreu um erro ao adicionar");
                 return null;
             }
 
+            var eventCriado = await _repository.GetEventosByIdAsync(evento.Id, false);
+
+            return _mapper.Map<EventoDto>(eventCriado);
+        }
+
+        public async Task<EventoDto> UpdateAsync(int id, EventoDto eventoDto)
+        {
             var evento = await _repository.GetEventosByIdAsync(id, false);
 
             if (evento == null)
             {
-                NotificarInformacao("Evento não encontrado.");
+                NotificarInformacao($"Evento com Id={id} não foi encontrado.");
                 return null;
             }
 
@@ -78,7 +87,21 @@ namespace Application.Services
             }
 
             return _mapper.Map<EventoDto>(evento);
+        }
 
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var evento = await _repository.GetByIdAsync(id);
+
+            if (evento == null)
+            {
+                NotificarInformacao($"Evento com Id={id} não foi encontrado.");
+                return false;
+            }
+
+            _repository.DeleteAsync(evento);
+
+            return await _repository.SaveChangesAsync();
         }
     }
 }
