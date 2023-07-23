@@ -13,8 +13,8 @@ namespace Domain.Dtos
         public string Telefone { get; set; }
         public string Email { get; set; }
 
-       //public IEnumerable<LoteDto> Lotes { get; set; }
-      //  public IEnumerable<RedeSocialDto> RedeSociais { get; set; }
-       // public IEnumerable<PalestranteDto> Palestrantes { get; set; }
+        public IEnumerable<LoteDto> Lotes { get; set; }
+        public IEnumerable<RedeSocialDto> RedeSociais { get; set; }
+        public IEnumerable<PalestranteDto> Palestrantes { get; set; }
     }
 }

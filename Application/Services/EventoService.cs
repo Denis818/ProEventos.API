@@ -5,9 +5,6 @@ using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using Application.Services.Base;
 using Application.Utilities;
-using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services
 {
