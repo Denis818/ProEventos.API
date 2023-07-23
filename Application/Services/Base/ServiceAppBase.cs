@@ -23,10 +23,16 @@ namespace Application.Services.Base
             _mapper = service.GetRequiredService<IMapper>();
         }
 
-        public TEntityDto MapToDto(TEntity entity) => _mapper.Map<TEntityDto>(entity);    
-        public TEntity MapToModel(TEntityDto entityDto) => _mapper.Map<TEntity>(entityDto);
-        public IEnumerable<TEntityDto> MapToListDto(IEnumerable<TEntity> entityDto) => _mapper.Map<IEnumerable<TEntityDto>>(entityDto);
+        public TEntityDto MapToDto(TEntity entity) 
+            => _mapper.Map<TEntityDto>(entity);    
+
+        public TEntity MapToModel(TEntityDto entityDto) 
+            => _mapper.Map<TEntity>(entityDto);
+
+        public IEnumerable<TEntityDto> MapToListDto(IEnumerable<TEntity> entityDto) 
+            => _mapper.Map<IEnumerable<TEntityDto>>(entityDto);
         
-        public void NotificarInformacao(string message) => _notificador.Add(new Notificacao(message));
+        public void NotificarInformacao(string message) 
+            => _notificador.Add(new Notificacao(message));
     }
 }

@@ -57,5 +57,14 @@ namespace ProEventos.API.Controllers
 
             return CustomResponse("Deletado");
         }
+
+        [HttpDelete("DeleteRange")]
+        public async Task<IActionResult> DeleteRanger(int[] ids)
+        {
+            if (!await _eventoService.DeleteRangerAsync(ids))
+                return CustomResponse("Ocorreu um erro ao deletar");
+
+            return CustomResponse("Deletados");
+        }
     }
 }

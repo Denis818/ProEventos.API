@@ -96,11 +96,26 @@ namespace Application.Services
 
             if (evento == null)
             {
-                NotificarInformacao($"{ErrorMessages.IdNotFound}={id}");
+                NotificarInformacao($"{ErrorMessages.IdNotFound} {id}");
                 return false;
             }
 
             _repository.DeleteAsync(evento);
+
+            return await _repository.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteRangerAsync(int[] ids)
+        {
+            var eventos = _repository.Get(evento => ids.Contains(evento.Id)).ToArray();
+
+            if (eventos.IsNullOrEmpty())
+            {
+                NotificarInformacao($"{ErrorMessages.IdNotFound} {string.Join(", ", ids)}");
+                return false;
+            }
+
+            _repository.DeleteRangeAsync(eventos);
 
             return await _repository.SaveChangesAsync();
         }
