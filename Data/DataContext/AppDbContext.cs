@@ -6,7 +6,6 @@ namespace Data.DataContext
 {
     public class AppDbContext : DbContext
     {
-        private readonly ILoggerFactory _loggerFactory;
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
         { 
         }
@@ -33,11 +32,6 @@ namespace Data.DataContext
                 .OnDelete(DeleteBehavior.Cascade);          
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.UseLoggerFactory(_loggerFactory);
-        }
+     
     }
 }

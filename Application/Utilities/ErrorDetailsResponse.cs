@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
-namespace ProEventos.API.Dto.Exception
+namespace Application.Utilities
 {
-    public class ErrorDetailsDto
+    public class ErrorDetailsResponse
     {
         public int StatusCode { get; set; }
         public string Message { get; set; }

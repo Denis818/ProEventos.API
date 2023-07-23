@@ -11,6 +11,7 @@ namespace ProEventos.API.Extensions.Dependencies
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
         }
+
         public static void UseCorsPolicy(this IApplicationBuilder app)
         {
             app.UseCors(builder =>

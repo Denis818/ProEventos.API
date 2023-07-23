@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Services;
+using Application.Utilities;
 using DadosInCached.CustomAttribute;
 using Domain.Dtos;
 using Domain.Models;
@@ -53,18 +54,18 @@ namespace ProEventos.API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _eventoService.DeleteAsync(id))
-                return CustomResponse("Ocorreu um erro ao deletar");
+                return CustomResponse(ErrorMessages.DeleteError);
 
-            return CustomResponse("Deletado");
+            return CustomResponse("Registro Deletado");
         }
 
         [HttpDelete("DeleteRange")]
         public async Task<IActionResult> DeleteRanger(int[] ids)
         {
             if (!await _eventoService.DeleteRangerAsync(ids))
-                return CustomResponse("Ocorreu um erro ao deletar");
+                return CustomResponse(ErrorMessages.DeleteError);
 
-            return CustomResponse("Deletados");
+            return CustomResponse("Registros Deletados");
         }
     }
 }

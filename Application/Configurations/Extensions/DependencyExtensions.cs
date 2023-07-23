@@ -7,6 +7,8 @@ using Application.Interfaces.Utility;
 using Application.Utilities;
 using Application.Services;
 using Application.Interfaces.Services;
+using Application.Utilities.Validators;
+using FluentValidation;
 
 namespace Application.Configurations.Extensions
 {
@@ -24,6 +26,8 @@ namespace Application.Configurations.Extensions
             services.AddScoped<INotificador, Notificador>();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
 
         }
     }

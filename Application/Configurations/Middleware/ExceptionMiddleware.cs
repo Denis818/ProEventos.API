@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using ProEventos.API.Dto.Exception;
+﻿using Application.Utilities;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 
 namespace Application.Configurations.Middleware
@@ -30,7 +30,7 @@ namespace Application.Configurations.Middleware
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            return context.Response.WriteAsync(new ErrorDetailsDto
+            return context.Response.WriteAsync(new ErrorDetailsResponse
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
                 Message = exception.Message,

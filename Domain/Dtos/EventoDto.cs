@@ -1,4 +1,6 @@
-﻿namespace Domain.Dtos
+﻿using Domain.Models;
+
+namespace Domain.Dtos
 {
     public class EventoDto
     {
@@ -10,5 +12,9 @@
         public string ImagemURL { get; set; }
         public string Telefone { get; set; }
         public string Email { get; set; }
+
+       //public IEnumerable<LoteDto> Lotes { get; set; }
+      //  public IEnumerable<RedeSocialDto> RedeSociais { get; set; }
+       // public IEnumerable<PalestranteDto> Palestrantes { get; set; }
     }
 }

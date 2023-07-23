@@ -5,13 +5,19 @@ using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using Application.Services.Base;
 using Application.Utilities;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services
 {
     public class EventoService : ServiceAppBase<Evento, EventoDto, IEventoRepository>, IEventoService
     {
+        private readonly IValidator<EventoDto> _validator;
+
         public EventoService(IServiceProvider service) : base(service)
         {
+            _validator = service.GetRequiredService<IValidator<EventoDto>>();
         }
 
         public async Task<IEnumerable<EventoDto>> GetAllEventosAsync(bool includePalestrantes = false)
@@ -43,7 +49,7 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                NotificarInformacao($"{ErrorMessages.IdNotFound}={id}.");
+                NotificarInformacao($"{ErrorMessages.IdNotFound} {id}.");
 
             var eventoDto = MapToDto(evento);
 
@@ -52,6 +58,17 @@ namespace Application.Services
 
         public async Task<EventoDto> InsertAsync(EventoDto eventoDto)
         {
+            ValidationResult results = _validator.Validate(eventoDto);
+
+            if (!results.IsValid)
+            {
+                foreach (var failure in results.Errors)
+                {
+                    NotificarInformacao(failure.ErrorMessage);
+                }
+                return null;
+            }
+
             var evento = MapToModel(eventoDto);
 
             await _repository.InsertAsync(evento);
@@ -71,13 +88,11 @@ namespace Application.Services
         {
             var evento = await _repository.GetEventosByIdAsync(id, false);
 
-            if (evento == null)
+            if (evento == null || evento.Id != eventoDto.Id)
             {
-                NotificarInformacao($"{ErrorMessages.IdNotFound}={id}");
+                NotificarInformacao($"{ErrorMessages.IdNotFoundOrDifferent}");
                 return null;
             }
-
-            eventoDto.Id = evento.Id;
 
             _mapper.Map(eventoDto, evento);
 
