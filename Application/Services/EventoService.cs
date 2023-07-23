@@ -13,11 +13,8 @@ namespace Application.Services
 {
     public class EventoService : ServiceAppBase<Evento, EventoDto, IEventoRepository>, IEventoService
     {
-        private readonly IValidator<EventoDto> _validator;
-
         public EventoService(IServiceProvider service) : base(service)
         {
-            _validator = service.GetRequiredService<IValidator<EventoDto>>();
         }
 
         public async Task<IEnumerable<EventoDto>> GetAllEventosAsync(bool includePalestrantes = false)
@@ -58,17 +55,8 @@ namespace Application.Services
 
         public async Task<EventoDto> InsertAsync(EventoDto eventoDto)
         {
-            ValidationResult results = _validator.Validate(eventoDto);
-
-            if (!results.IsValid)
-            {
-                foreach (var failure in results.Errors)
-                {
-                    NotificarInformacao(failure.ErrorMessage);
-                }
-                return null;
-            }
-
+            if (Validator(eventoDto)) return null;
+            
             var evento = MapToModel(eventoDto);
 
             await _repository.InsertAsync(evento);
@@ -86,6 +74,8 @@ namespace Application.Services
 
         public async Task<EventoDto> UpdateAsync(int id, EventoDto eventoDto)
         {
+            if (Validator(eventoDto)) return null;
+
             var evento = await _repository.GetEventosByIdAsync(id, false);
 
             if (evento == null || evento.Id != eventoDto.Id)

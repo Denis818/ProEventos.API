@@ -4,6 +4,8 @@ using AutoMapper;
 using Data.Interfaces.Base;
 using Domain.Dtos;
 using Domain.Models;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services.Base
@@ -14,13 +16,16 @@ namespace Application.Services.Base
     {
         protected readonly TIRepository _repository;
         protected readonly INotificador _notificador;
+        protected readonly IValidator<TEntityDto> _validator;
         protected readonly IMapper _mapper;
 
         protected ServiceAppBase(IServiceProvider service)
         {
+            _mapper = service.GetRequiredService<IMapper>();
             _repository = service.GetRequiredService<TIRepository>();
             _notificador = service.GetRequiredService<INotificador>();
-            _mapper = service.GetRequiredService<IMapper>();
+            _validator = service.GetRequiredService<IValidator<TEntityDto>>();
+
         }
 
         public TEntityDto MapToDto(TEntity entity) 
@@ -34,5 +39,18 @@ namespace Application.Services.Base
         
         public void NotificarInformacao(string message) 
             => _notificador.Add(new Notificacao(message));
+
+        public bool Validator(TEntityDto entityDto)
+        {
+            ValidationResult results = _validator.Validate(entityDto);
+
+            if (!results.IsValid)
+            {
+                results.Errors.ForEach(failure => NotificarInformacao(failure.ErrorMessage));
+                return true;
+            }
+
+            return false;
+        }
     }
 }

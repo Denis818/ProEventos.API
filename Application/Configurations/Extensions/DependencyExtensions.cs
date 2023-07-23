@@ -4,11 +4,10 @@ using Data.Repository;
 using System.Reflection;
 using Data.Interfaces;
 using Application.Interfaces.Utility;
-using Application.Utilities;
 using Application.Services;
 using Application.Interfaces.Services;
-using Application.Utilities.Validators;
 using FluentValidation;
+using Application.Helpers;
 
 namespace Application.Configurations.Extensions
 {
