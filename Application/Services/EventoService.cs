@@ -77,6 +77,8 @@ namespace Application.Services
                 return null;
             }
 
+            eventoDto.Id = evento.Id;
+
             _mapper.Map(eventoDto, evento);
 
             _repository.UpdateAsync(evento);
