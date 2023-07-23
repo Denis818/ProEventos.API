@@ -4,10 +4,11 @@ using Domain.Dtos;
 using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using Application.Services.Base;
+using Application.Utilities;
 
 namespace Application.Services
 {
-    public class EventoService : ServiceAppBase<Evento, IEventoRepository>, IEventoService
+    public class EventoService : ServiceAppBase<Evento, EventoDto, IEventoRepository>, IEventoService
     {
         public EventoService(IServiceProvider service) : base(service)
         {
@@ -18,7 +19,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosAsync(includePalestrantes);
 
             if (eventos.IsNullOrEmpty())
-                NotificarInformacao("Nenhum evento encontrado");
+                NotificarInformacao(ErrorMessages.NotFound);
 
             var eventoDto = _mapper.Map<IEnumerable<EventoDto>>(eventos);
 
@@ -30,9 +31,9 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosByTemaAsync(tema);
 
             if (eventos.IsNullOrEmpty())
-                NotificarInformacao($"Eventos com tema {tema} não encontrados");
+                NotificarInformacao($"Nenhum evento com tema={tema} encontrado.");
 
-            var eventoDto = _mapper.Map<IEnumerable<EventoDto>>(eventos);
+            var eventoDto = MapToListDto(eventos);
 
             return eventoDto;
         }
@@ -42,28 +43,28 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                NotificarInformacao($"Evento com id {id} não encontrado");
+                NotificarInformacao($"{ErrorMessages.IdNotFound}={id}.");
 
-            var eventoDto = _mapper.Map<EventoDto>(evento);
+            var eventoDto = MapToDto(evento);
 
             return eventoDto;
         }
 
         public async Task<EventoDto> InsertAsync(EventoDto eventoDto)
         {
-            var evento = _mapper.Map<Evento>(eventoDto);
+            var evento = MapToModel(eventoDto);
 
             await _repository.InsertAsync(evento);
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarInformacao("Ocorreu um erro ao adicionar");
+                NotificarInformacao(ErrorMessages.InsertError);
                 return null;
             }
 
             var eventCriado = await _repository.GetEventosByIdAsync(evento.Id, false);
 
-            return _mapper.Map<EventoDto>(eventCriado);
+            return MapToDto(eventCriado);
         }
 
         public async Task<EventoDto> UpdateAsync(int id, EventoDto eventoDto)
@@ -72,7 +73,7 @@ namespace Application.Services
 
             if (evento == null)
             {
-                NotificarInformacao($"Evento com Id={id} não foi encontrado.");
+                NotificarInformacao($"{ErrorMessages.IdNotFound}={id}");
                 return null;
             }
 
@@ -82,11 +83,11 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarInformacao("Ocorreu um erro ao atualizar evento.");
+                NotificarInformacao(ErrorMessages.UpdateError);
                 return null;
             }
 
-            return _mapper.Map<EventoDto>(evento);
+            return MapToDto(evento);
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -95,7 +96,7 @@ namespace Application.Services
 
             if (evento == null)
             {
-                NotificarInformacao($"Evento com Id={id} não foi encontrado.");
+                NotificarInformacao($"{ErrorMessages.IdNotFound}={id}");
                 return false;
             }
 
