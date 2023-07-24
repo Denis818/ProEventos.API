@@ -7,7 +7,7 @@
         public const string DeleteError = "Ocorreu um erro ao deletar o registro.";
 
         public const string NotFound = "Nenhum registro foi encontrado.";
-        public const string IdNotFound = "Nenhum registro foi encontrado, ID(s):";
-        public const string IdNotFoundOrDifferent = "O id do evento especificado não existe ou o ID do evento não corresponde ao ID fornecido.";     
+        public const string IdNotFound = "Nenhum registro foi encontrado, Id(s):";
+        public const string IdNotFoundOrDifferent = "O id do evento não existe ou o ID do evento não corresponde ao ID fornecido.";     
     }
 }

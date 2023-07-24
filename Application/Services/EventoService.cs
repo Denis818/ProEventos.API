@@ -21,9 +21,7 @@ namespace Application.Services
             if (eventos.IsNullOrEmpty())
                 NotificarInformacao(ErrorMessages.NotFound);
 
-            var eventoDto = _mapper.Map<IEnumerable<EventoDto>>(eventos);
-
-            return eventoDto;
+            return MapToListDto(eventos);
         }
 
         public async Task<IEnumerable<EventoDto>> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
@@ -33,9 +31,7 @@ namespace Application.Services
             if (eventos.IsNullOrEmpty())
                 NotificarInformacao($"Nenhum evento com tema={tema} encontrado.");
 
-            var eventoDto = MapToListDto(eventos);
-
-            return eventoDto;
+            return MapToListDto(eventos);
         }
 
         public async Task<EventoDto> GetEventosByIdAsync(int id, bool includePalestrantes = false)
@@ -45,9 +41,7 @@ namespace Application.Services
             if (evento == null)
                 NotificarInformacao($"{ErrorMessages.IdNotFound} {id}.");
 
-            var eventoDto = MapToDto(evento);
-
-            return eventoDto;
+            return MapToDto(evento);
         }
 
         public async Task<EventoDto> InsertAsync(EventoDto eventoDto)
@@ -80,7 +74,7 @@ namespace Application.Services
                 NotificarInformacao($"{ErrorMessages.IdNotFoundOrDifferent}");
                 return null;
             }
-
+             
             _mapper.Map(eventoDto, evento);
 
             _repository.UpdateAsync(evento);

@@ -2,8 +2,6 @@
 using Application.Utilities;
 using AutoMapper;
 using Data.Interfaces.Base;
-using Domain.Dtos;
-using Domain.Models;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,10 +12,10 @@ namespace Application.Services.Base
         where TEntity : class, new()
         where TIRepository : class, IRepositoryBase<TEntity>
     {
+        protected readonly IMapper _mapper;
         protected readonly TIRepository _repository;
         protected readonly INotificador _notificador;
         protected readonly IValidator<TEntityDto> _validator;
-        protected readonly IMapper _mapper;
 
         protected ServiceAppBase(IServiceProvider service)
         {
