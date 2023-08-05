@@ -39,7 +39,7 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                Notificar($"{ErrorMessages.IdNotFound} {id}.");
+                Notificar($"{ErrorMessages.NotFound} Id {id}");
 
             return MapToDto(evento);
         }
@@ -65,15 +65,15 @@ namespace Application.Services
 
         public async Task<EventoDto> UpdateAsync(int id, EventoDto eventoDto)
         {
-            if (Validator(eventoDto)) return null;
-
             var evento = await _repository.GetEventosByIdAsync(id, false);
 
             if (evento == null || evento.Id != eventoDto.Id)
             {
-                Notificar($"{ErrorMessages.IdNotFoundOrDifferent}");
+                Notificar(ErrorMessages.NotFoundOrDifferentId);
                 return null;
             }
+
+            if (Validator(eventoDto)) return null;
 
             _mapper.Map(eventoDto, evento);
 
@@ -94,7 +94,7 @@ namespace Application.Services
 
             if (evento == null)
             {
-                Notificar($"{ErrorMessages.IdNotFound} {id}");
+                Notificar($"{ErrorMessages.NotFound} Id {id}");
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace Application.Services
 
             if (eventos.IsNullOrEmpty())
             {
-                Notificar($"{ErrorMessages.IdNotFound} {string.Join(", ", ids)}");
+                Notificar($"{ErrorMessages.NotFound} Ids: {string.Join(", ", ids)}");
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace Application.Services
 
             if (idsNaoEncontrados.Any())
             {
-                Notificar($"{ErrorMessages.IdNotFound} {string.Join(", ", idsNaoEncontrados)}. Deletando os encontrados.");
+                Notificar($"{ErrorMessages.NotFound} Ids: {string.Join(", ", idsNaoEncontrados)}; Deletando os encontrados");
             }
 
             _repository.DeleteRangeAsync(eventos);

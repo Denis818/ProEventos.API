@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ProEventos.API.Controllers.Base
 {
-
     public abstract class BaseApiController : Controller
     {
         protected INotificador Notificador { get; private set; }
