@@ -27,22 +27,36 @@ namespace ProEventos.API.Controllers.Base
 
         protected IActionResult CustomResponse<TResponse>(TResponse contentResponse)
         {
-            if (Notificador.ListNotificacoes.Any())
+            if (Notificador.ListNotificacoes.Count >= 1)
             {
-                return Ok(new ResponseResultDTO<TResponse>(contentResponse)
+                var errosInternos = Notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.ErroInterno);
+                if (errosInternos.Any())
                 {
-                    Message = Notificador.ListNotificacoes.ToArray()
-                });
+                    var result = new ResponseResultDTO<TResponse>(contentResponse) { Mensagens = errosInternos.ToArray() };
+                    return new ObjectResult(result) { StatusCode = 500 };
+                }
+
+                var erros = Notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Erro);
+                if (erros.Any())
+                {
+                    var result = new ResponseResultDTO<TResponse>(default) { Mensagens = erros.ToArray() };
+                    return BadRequest(result);
+                }
+
+                var informacoes = Notificador.ListNotificacoes.Where(item => item.Tipo == EnumTipoNotificacao.Informacao);
+                if (informacoes.Any())
+                    return Ok(new ResponseResultDTO<TResponse>(contentResponse) { Mensagens = informacoes.ToArray() });
             }
 
             return Ok(new ResponseResultDTO<TResponse>(contentResponse));
+
         }
     }
 
     public class ResponseResultDTO<TResponse>
     {
         public TResponse Data { get; set; }
-        public Notificacao[] Message { get; set; } = Array.Empty<Notificacao>();
+        public Notificacao[] Mensagens { get; set; } = Array.Empty<Notificacao>();
 
         public ResponseResultDTO(TResponse data = default)
         {

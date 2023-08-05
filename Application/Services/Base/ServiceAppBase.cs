@@ -23,7 +23,6 @@ namespace Application.Services.Base
             _repository = service.GetRequiredService<TIRepository>();
             _notificador = service.GetRequiredService<INotificador>();
             _validator = service.GetRequiredService<IValidator<TEntityDto>>();
-
         }
 
         public TEntityDto MapToDto(TEntity entity) 
@@ -35,8 +34,8 @@ namespace Application.Services.Base
         public IEnumerable<TEntityDto> MapToListDto(IEnumerable<TEntity> entityDto) 
             => _mapper.Map<IEnumerable<TEntityDto>>(entityDto);
         
-        public void NotificarInformacao(string message) 
-            => _notificador.Add(new Notificacao(message));
+        public void Notificar(string message, EnumTipoNotificacao tipo = EnumTipoNotificacao.Erro) 
+            => _notificador.Add(new Notificacao(tipo, message));
 
         public bool Validator(TEntityDto entityDto)
         {
@@ -44,7 +43,7 @@ namespace Application.Services.Base
 
             if (!results.IsValid)
             {
-                results.Errors.ForEach(failure => NotificarInformacao(failure.ErrorMessage));
+                results.Errors.ForEach(failure => Notificar(failure.ErrorMessage, EnumTipoNotificacao.Informacao));
                 return true;
             }
 

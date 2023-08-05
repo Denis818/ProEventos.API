@@ -19,7 +19,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosAsync(includePalestrantes);
 
             if (eventos.IsNullOrEmpty())
-                NotificarInformacao(ErrorMessages.NotFound);
+                Notificar(ErrorMessages.NotFound);
 
             return MapToListDto(eventos);
         }
@@ -29,7 +29,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosByTemaAsync(tema);
 
             if (eventos.IsNullOrEmpty())
-                NotificarInformacao($"Nenhum evento com tema={tema} encontrado.");
+                Notificar($"Nenhum evento com tema={tema} encontrado.");
 
             return MapToListDto(eventos);
         }
@@ -39,7 +39,7 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                NotificarInformacao($"{ErrorMessages.IdNotFound} {id}.");
+                Notificar($"{ErrorMessages.IdNotFound} {id}.");
 
             return MapToDto(evento);
         }
@@ -54,7 +54,7 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarInformacao(ErrorMessages.InsertError);
+                Notificar(ErrorMessages.InsertError, EnumTipoNotificacao.ErroInterno);
                 return null;
             }
 
@@ -71,7 +71,7 @@ namespace Application.Services
 
             if (evento == null || evento.Id != eventoDto.Id)
             {
-                NotificarInformacao($"{ErrorMessages.IdNotFoundOrDifferent}");
+                Notificar($"{ErrorMessages.IdNotFoundOrDifferent}");
                 return null;
             }
 
@@ -81,7 +81,7 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarInformacao(ErrorMessages.UpdateError);
+                Notificar(ErrorMessages.UpdateError, EnumTipoNotificacao.ErroInterno);
                 return null;
             }
 
@@ -94,7 +94,7 @@ namespace Application.Services
 
             if (evento == null)
             {
-                NotificarInformacao($"{ErrorMessages.IdNotFound} {id}");
+                Notificar($"{ErrorMessages.IdNotFound} {id}");
                 return;
             }
 
@@ -102,11 +102,11 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarInformacao(ErrorMessages.DeleteError);
+                Notificar(ErrorMessages.DeleteError, EnumTipoNotificacao.ErroInterno);
                 return;
             }
 
-            NotificarInformacao("Registro Deletado");
+            Notificar("Registro Deletado");
         }
 
         public async Task DeleteRangerAsync(int[] ids)
@@ -115,7 +115,7 @@ namespace Application.Services
 
             if (eventos.IsNullOrEmpty())
             {
-                NotificarInformacao($"{ErrorMessages.IdNotFound} {string.Join(", ", ids)}");
+                Notificar($"{ErrorMessages.IdNotFound} {string.Join(", ", ids)}");
                 return;
             }
 
@@ -123,18 +123,18 @@ namespace Application.Services
 
             if (idsNaoEncontrados.Any())
             {
-                NotificarInformacao($"{ErrorMessages.IdNotFound} {string.Join(", ", idsNaoEncontrados)}. Deletando os encontrados.");
+                Notificar($"{ErrorMessages.IdNotFound} {string.Join(", ", idsNaoEncontrados)}. Deletando os encontrados.");
             }
 
             _repository.DeleteRangeAsync(eventos);
 
             if (!await _repository.SaveChangesAsync())
             {
-                NotificarInformacao(ErrorMessages.DeleteError);
+                Notificar(ErrorMessages.DeleteError, EnumTipoNotificacao.ErroInterno);
                 return;
             }
 
-            NotificarInformacao("Registros Deletados");
+            Notificar("Registros Deletados");
         }
     }
 }

@@ -44,7 +44,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<MiddlewareException>();
 
 app.MapControllers();
 
