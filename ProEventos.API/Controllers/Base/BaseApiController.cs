@@ -2,6 +2,7 @@
 using Application.Utilities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ProEventos.API.Controllers.Base
 {
@@ -12,6 +13,16 @@ namespace ProEventos.API.Controllers.Base
         public BaseApiController(IServiceProvider service)
         {
             Notificador = service.GetRequiredService<INotificador>();
+        }
+
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            if (context.Result is not ObjectResult result)
+            {
+                context.Result = CustomResponse<object>(null);
+                return;
+            }
+            context.Result = CustomResponse(result.Value);
         }
 
         protected IActionResult CustomResponse<TResponse>(TResponse contentResponse)

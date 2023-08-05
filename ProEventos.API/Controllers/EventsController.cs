@@ -21,51 +21,45 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetAll()
+        public async Task<IEnumerable<EventoDto>> GetAll()
         {
-            return CustomResponse(await _eventoService.GetAllEventosAsync(true));
+            return await _eventoService.GetAllEventosAsync(true);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<EventoDto> GetById(int id)
         {
-            return CustomResponse(await _eventoService.GetEventosByIdAsync(id, true));
+            return await _eventoService.GetEventosByIdAsync(id, true);
         }
 
         [HttpGet("tema/{tema}")]
-        public async Task<IActionResult> GetByTema(string tema)
+        public async Task<IEnumerable<EventoDto>> GetByTema(string tema)
         {
-            return CustomResponse(await _eventoService.GetAllEventosByTemaAsync(tema, true));
+            return await _eventoService.GetAllEventosByTemaAsync(tema, true);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(EventoDto eventodto)
+        public async Task<EventoDto> Post(EventoDto eventodto)
         {
-            return CustomResponse(await _eventoService.InsertAsync(eventodto));
+            return await _eventoService.InsertAsync(eventodto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, EventoDto eventoDto)
+        public async Task<EventoDto> Put(int id, EventoDto eventoDto)
         {
-            return CustomResponse(await _eventoService.UpdateAsync(id, eventoDto));
+            return await _eventoService.UpdateAsync(id, eventoDto);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public async Task Delete(int id)
         {
-            if (!await _eventoService.DeleteAsync(id))
-                return CustomResponse(ErrorMessages.DeleteError);
-
-            return CustomResponse("Registro Deletado");
+            await _eventoService.DeleteAsync(id);
         }
 
         [HttpDelete("DeleteRange")]
-        public async Task<IActionResult> DeleteRanger(int[] ids)
+        public async Task DeleteRanger(int[] ids)
         {
-            if (!await _eventoService.DeleteRangerAsync(ids))
-                return CustomResponse(ErrorMessages.DeleteError);
-
-            return CustomResponse("Registros Deletados");
+            await _eventoService.DeleteRangerAsync(ids);
         }
     }
 }

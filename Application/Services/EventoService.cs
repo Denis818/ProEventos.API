@@ -47,7 +47,7 @@ namespace Application.Services
         public async Task<EventoDto> InsertAsync(EventoDto eventoDto)
         {
             if (Validator(eventoDto)) return null;
-            
+
             var evento = MapToModel(eventoDto);
 
             await _repository.InsertAsync(evento);
@@ -74,7 +74,7 @@ namespace Application.Services
                 NotificarInformacao($"{ErrorMessages.IdNotFoundOrDifferent}");
                 return null;
             }
-             
+
             _mapper.Map(eventoDto, evento);
 
             _repository.UpdateAsync(evento);
@@ -88,34 +88,53 @@ namespace Application.Services
             return MapToDto(evento);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var evento = await _repository.GetByIdAsync(id);
 
             if (evento == null)
             {
                 NotificarInformacao($"{ErrorMessages.IdNotFound} {id}");
-                return false;
+                return;
             }
 
             _repository.DeleteAsync(evento);
 
-            return await _repository.SaveChangesAsync();
+            if (!await _repository.SaveChangesAsync())
+            {
+                NotificarInformacao(ErrorMessages.DeleteError);
+                return;
+            }
+
+            NotificarInformacao("Registro Deletado");
         }
 
-        public async Task<bool> DeleteRangerAsync(int[] ids)
+        public async Task DeleteRangerAsync(int[] ids)
         {
             var eventos = _repository.Get(evento => ids.Contains(evento.Id)).ToArray();
 
             if (eventos.IsNullOrEmpty())
             {
                 NotificarInformacao($"{ErrorMessages.IdNotFound} {string.Join(", ", ids)}");
-                return false;
+                return;
+            }
+
+            var idsNaoEncontrados = ids.Except(eventos.Select(evento => evento.Id).ToArray());
+
+            if (idsNaoEncontrados.Any())
+            {
+                NotificarInformacao($"{ErrorMessages.IdNotFound} {string.Join(", ", idsNaoEncontrados)}. Deletando os encontrados.");
             }
 
             _repository.DeleteRangeAsync(eventos);
 
-            return await _repository.SaveChangesAsync();
+            if (!await _repository.SaveChangesAsync())
+            {
+                NotificarInformacao(ErrorMessages.DeleteError);
+                return;
+            }
+
+            NotificarInformacao("Registros Deletados");
         }
     }
 }
