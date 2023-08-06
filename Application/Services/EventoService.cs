@@ -39,7 +39,7 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                Notificar($"{ErrorMessages.NotFound} Id {id}");
+                Notificar(ErrorMessages.NotFoundById + id);
 
             return MapToDto(evento);
         }
@@ -94,7 +94,7 @@ namespace Application.Services
 
             if (evento == null)
             {
-                Notificar($"{ErrorMessages.NotFound} Id {id}");
+                Notificar(ErrorMessages.NotFoundById + id);
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace Application.Services
 
             if (eventos.IsNullOrEmpty())
             {
-                Notificar($"{ErrorMessages.NotFound} Ids: {string.Join(", ", ids)}");
+                Notificar(ErrorMessages.NotFoundByIds + string.Join(", ", ids));
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace Application.Services
 
             if (idsNaoEncontrados.Any())
             {
-                Notificar($"{ErrorMessages.NotFound} Ids: {string.Join(", ", idsNaoEncontrados)}; Deletando os encontrados");
+                Notificar($"{ErrorMessages.NotFoundByIds}{string.Join(", ", idsNaoEncontrados)}, Deletando os encontrados");
             }
 
             _repository.DeleteRangeAsync(eventos);
