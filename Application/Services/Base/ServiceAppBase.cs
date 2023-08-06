@@ -34,7 +34,7 @@ namespace Application.Services.Base
         public IEnumerable<TEntityDto> MapToListDto(IEnumerable<TEntity> entityDto) 
             => _mapper.Map<IEnumerable<TEntityDto>>(entityDto);
         
-        public void Notificar(string message, EnumTipoNotificacao tipo = EnumTipoNotificacao.Erro) 
+        public void Notificar(EnumTipoNotificacao tipo, string message) 
             => _notificador.Add(new Notificacao(tipo, message));
 
         public bool Validator(TEntityDto entityDto)
@@ -43,7 +43,7 @@ namespace Application.Services.Base
 
             if (!results.IsValid)
             {
-                results.Errors.ForEach(failure => Notificar(failure.ErrorMessage, EnumTipoNotificacao.Informacao));
+                results.Errors.ForEach(failure => Notificar(EnumTipoNotificacao.Informacao, failure.ErrorMessage));
                 return true;
             }
 

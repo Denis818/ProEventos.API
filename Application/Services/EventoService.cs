@@ -19,7 +19,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosAsync(includePalestrantes);
 
             if (eventos.IsNullOrEmpty())
-                Notificar(ErrorMessages.NotFound);
+                Notificar(EnumTipoNotificacao.Erro, ErrorMessages.NotFound);
 
             return MapToListDto(eventos);
         }
@@ -29,7 +29,7 @@ namespace Application.Services
             var eventos = await _repository.GetAllEventosByTemaAsync(tema);
 
             if (eventos.IsNullOrEmpty())
-                Notificar($"Nenhum evento com tema={tema} encontrado.");
+                Notificar(EnumTipoNotificacao.Erro, $"Nenhum evento com tema={tema} encontrado.");
 
             return MapToListDto(eventos);
         }
@@ -39,7 +39,7 @@ namespace Application.Services
             var evento = await _repository.GetEventosByIdAsync(id, includePalestrantes);
 
             if (evento == null)
-                Notificar(ErrorMessages.NotFoundById + id);
+                Notificar(EnumTipoNotificacao.Erro, ErrorMessages.NotFoundById + id);
 
             return MapToDto(evento);
         }
@@ -54,7 +54,7 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                Notificar(ErrorMessages.InsertError, EnumTipoNotificacao.ErroInterno);
+                Notificar(EnumTipoNotificacao.ErroInterno, ErrorMessages.InsertError);
                 return null;
             }
 
@@ -69,7 +69,7 @@ namespace Application.Services
 
             if (evento == null || evento.Id != eventoDto.Id)
             {
-                Notificar(ErrorMessages.NotFoundOrDifferentId);
+                Notificar(EnumTipoNotificacao.Erro, ErrorMessages.NotFoundOrDifferentId);
                 return null;
             }
 
@@ -81,7 +81,7 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                Notificar(ErrorMessages.UpdateError, EnumTipoNotificacao.ErroInterno);
+                Notificar(EnumTipoNotificacao.ErroInterno, ErrorMessages.UpdateError);
                 return null;
             }
 
@@ -94,7 +94,7 @@ namespace Application.Services
 
             if (evento == null)
             {
-                Notificar(ErrorMessages.NotFoundById + id);
+                Notificar(EnumTipoNotificacao.Erro, ErrorMessages.NotFoundById + id);
                 return;
             }
 
@@ -102,11 +102,11 @@ namespace Application.Services
 
             if (!await _repository.SaveChangesAsync())
             {
-                Notificar(ErrorMessages.DeleteError, EnumTipoNotificacao.ErroInterno);
+                Notificar(EnumTipoNotificacao.ErroInterno, ErrorMessages.DeleteError);
                 return;
             }
 
-            Notificar("Registro Deletado");
+            Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
         }
 
         public async Task DeleteRangerAsync(int[] ids)
@@ -115,26 +115,28 @@ namespace Application.Services
 
             if (eventos.IsNullOrEmpty())
             {
-                Notificar(ErrorMessages.NotFoundByIds + string.Join(", ", ids));
+                Notificar(EnumTipoNotificacao.Erro, ErrorMessages.NotFoundByIds + string.Join(", ", ids));
                 return;
             }
 
-            var idsNaoEncontrados = ids.Except(eventos.Select(evento => evento.Id).ToArray());
+            var idsNaoEncontrados = ids.Except(eventos.Select(evento => evento.Id));
 
             if (idsNaoEncontrados.Any())
             {
-                Notificar($"{ErrorMessages.NotFoundByIds}{string.Join(", ", idsNaoEncontrados)}, Deletando os encontrados");
+                string idsNotFound = $"{string.Join(", ", idsNaoEncontrados)}. Encontrados foram deletados";
+
+                Notificar(EnumTipoNotificacao.Erro, ErrorMessages.NotFoundByIds + idsNotFound);
             }
 
             _repository.DeleteRangeAsync(eventos);
 
             if (!await _repository.SaveChangesAsync())
             {
-                Notificar(ErrorMessages.DeleteError, EnumTipoNotificacao.ErroInterno);
+                Notificar(EnumTipoNotificacao.ErroInterno, ErrorMessages.DeleteError);
                 return;
             }
 
-            Notificar("Registros Deletados");
+            Notificar( EnumTipoNotificacao.Informacao, "Registros Deletados");
         }
     }
 }

@@ -54,12 +54,16 @@ namespace ProEventos.API.Controllers.Base
 
     public class ResponseResultDTO<TResponse>
     {
-        public TResponse Data { get; set; }
-        public Notificacao[] Mensagens { get; set; } = Array.Empty<Notificacao>();
+        public TResponse Dados { get; set; }
+        public Notificacao[] Mensagens { get; set; }
 
-        public ResponseResultDTO(TResponse data = default)
+        public ResponseResultDTO(TResponse data, Notificacao[] notificacoes = null)
         {
-            Data = data;
+            Dados = data;
+            Mensagens = notificacoes;
+        }
+        public ResponseResultDTO()
+        {
         }
     }
 }
