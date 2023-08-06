@@ -43,11 +43,23 @@ namespace Application.Services.Base
 
             if (!results.IsValid)
             {
-                results.Errors.ForEach(failure => Notificar(EnumTipoNotificacao.Informacao, failure.ErrorMessage));
+                var groupedFailures = results.Errors
+                                             .GroupBy(failure => failure.PropertyName)
+                                             .Select(group => new {
+                                                 PropertyName = group.Key,
+                                                 Errors = string.Join(" ", group.Select(err => err.ErrorMessage))
+                                             });
+
+                foreach (var failure in groupedFailures)
+                {
+                    Notificar(EnumTipoNotificacao.Informacao, $"{failure.PropertyName}: {failure.Errors}");
+                }
+
                 return true;
             }
 
             return false;
         }
+
     }
 }
