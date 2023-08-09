@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces.Utility;
-using Application.Utilities;
 
-namespace Application.Helpers
+namespace Application.Utilities
 {
     public class Notificador : INotificador
     {

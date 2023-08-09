@@ -1,7 +1,7 @@
 ﻿using Domain.Dtos;
 using FluentValidation;
 
-namespace Application.Helpers.Validators
+namespace Application.Validators
 {
     public class EventoValidator : AbstractValidator<EventoDto>
     {

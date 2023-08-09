@@ -7,7 +7,7 @@ using Application.Interfaces.Utility;
 using Application.Services;
 using Application.Interfaces.Services;
 using FluentValidation;
-using Application.Helpers;
+using Application.Utilities;
 
 namespace Application.Configurations.Extensions
 {

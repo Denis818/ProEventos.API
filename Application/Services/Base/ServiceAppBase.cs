@@ -60,6 +60,5 @@ namespace Application.Services.Base
 
             return false;
         }
-
     }
 }

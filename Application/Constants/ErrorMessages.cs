@@ -1,4 +1,4 @@
-﻿namespace Application.Utilities
+﻿namespace Application.Constants
 {
     public static class ErrorMessages
     {
