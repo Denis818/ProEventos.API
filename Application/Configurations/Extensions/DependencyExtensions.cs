@@ -26,8 +26,6 @@ namespace Application.Configurations.Extensions
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-
         }
     }
 }

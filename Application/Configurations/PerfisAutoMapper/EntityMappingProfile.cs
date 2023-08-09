@@ -2,7 +2,7 @@
 using Domain.Dtos;
 using Domain.Models;
 
-namespace Application.Configurations.PerfisAutoMapper.EntitysProfiles
+namespace Application.Configurations.PerfisAutoMapper
 {
     public class EntityMappingProfile : Profile
     {

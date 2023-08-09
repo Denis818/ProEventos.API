@@ -1,9 +1,7 @@
 ﻿using Application.Interfaces.Services;
-using Application.Utilities;
-using DadosInCached.CustomAttribute;
 using Domain.Dtos;
-using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.API.Configuration.Atttributes;
 using ProEventos.API.Controllers.Base;
 
 namespace ProEventos.API.Controllers

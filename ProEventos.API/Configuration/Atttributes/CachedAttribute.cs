@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace DadosInCached.CustomAttribute
+namespace ProEventos.API.Configuration.Atttributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class CachedAttribute : Attribute, IAsyncActionFilter

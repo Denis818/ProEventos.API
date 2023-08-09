@@ -2,7 +2,7 @@
 using ProEventos.API.Controllers.Base;
 using System.Text.Json;
 
-namespace Application.Configurations.Middleware
+namespace ProEventos.API.Configuration.Middleware
 {
     public class MiddlewareException
     {

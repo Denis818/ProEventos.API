@@ -1,20 +1,11 @@
 using Data.Configuration;
 using Application.Configurations.Extensions;
-using Application.Configurations.Middleware;
-using ProEventos.API.Extensions.Dependencies;
-using Serilog;
-using Serilog.Sinks.SystemConsole.Themes;
+using ProEventos.API.Configuration.Middleware;
+using ProEventos.API.Configuration.Extensions.Dependencies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//SeriLog
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm} {Level:u3}] {Message:lj}{NewLine}{Exception}\n",
-    theme: AnsiConsoleTheme.Sixteen).CreateLogger();
-builder.Logging.ClearProviders();
-builder.Logging.AddSerilog(Log.Logger);
-
+builder.AddCustomSeriLog();
 builder.Services.AddCors();
 builder.Services.AddControllersConfiguration();
 builder.Services.AddEndpointsApiExplorer();
