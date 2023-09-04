@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces.Services;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using ProEventos.API.Configuration.Atttributes;
 using ProEventos.API.Controllers.Base;
+using Save.Cache.Memory;
 
 namespace ProEventos.API.Controllers
 {
