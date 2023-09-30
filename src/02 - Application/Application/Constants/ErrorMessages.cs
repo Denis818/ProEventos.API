@@ -2,8 +2,8 @@
 {
     public static class ErrorMessages
     {
-        public const string UpdateError = "Ocorreu um erro ao atualizar o registro.";
-        public const string InsertError = "Ocorreu um erro ao adicionar o registro.";
+        public const string UpdateError = "Ocorreu um erro ao atualizar.";
+        public const string InsertError = "Ocorreu um erro ao adicionar.";
         public const string DeleteError = "Ocorreu um erro ao deletar um ou mais registros.";
 
         public const string NotFound = "Nenhum registro foi encontrado.";

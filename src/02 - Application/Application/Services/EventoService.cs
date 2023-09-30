@@ -76,7 +76,7 @@ namespace Application.Services
 
             if (Validator(eventoDto)) return null;
 
-            _mapper.Map(eventoDto, evento);
+            MapDtoToModel(eventoDto, evento);
 
             _repository.UpdateAsync(evento);
 

@@ -25,6 +25,9 @@ namespace Application.Services.Base
             _validator = service.GetRequiredService<IValidator<TEntityDto>>();
         }
 
+        public void MapDtoToModel(TEntityDto entityDto, TEntity entity)
+            => _mapper.Map(entityDto, entity);
+
         public TEntityDto MapToDto(TEntity entity) 
             => _mapper.Map<TEntityDto>(entity);    
 
